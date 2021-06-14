@@ -27,7 +27,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light cloginbar shadow-sm ">
+        <nav class="navbar navbar-expand-md navbar-light sloginbar shadow-sm ">
             <div class="container">
 
                 
@@ -43,7 +43,7 @@
                     <ul class="navbar-nav mr-auto ">
 
                         <li class="nav-item active ">
-                            <a class="nav-link text-white" href="{{ URL::to('orders/') }}">Home<span class="sr-only">(current)</span></a>
+                            <a class="nav-link text-white" href="{{ URL::to('staff/') }}">Home<span class="sr-only">(current)</span></a>
                           </li>
                           <li class="nav-item">
                             <a class="nav-link text-white" href="{{ URL::to('orders/') }}">View All Orders</a>
@@ -65,6 +65,18 @@
                             </div>
                           </li>
 
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Staff Account</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item " href="{{ URL::to('staff/staffacct/create') }}">Create New Staff Account</a>
+                              <!-- Dropdown menu item for create new order with details -->
+                                <a class="dropdown-item" href="{{ URL::to('staff/staffacct') }}">View All Staff Account</a>
+                            </div>
+                          </li>
+
+                          
+
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -81,18 +93,11 @@
                         
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->custname }}
+                                    {{ Auth::user()->stfName }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    <a href="{{ route('change.password') }}" class="dropdown-item">
-                                    {{ __('Change Password') }}    
-                                    </a> 
-
-                                    <a href="/profile/{{ Auth::user()->id }}/edit" class="dropdown-item">
-                                        {{ __('Edit Profile ') }}    
-                                    </a> 
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\profileController;
+use App\Http\Controllers\staffAcctController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\profileController;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('change-password', 'ChangePWController@index');
 Route::post('change-password', 'ChangePWController@store')->name('change.password');
 
@@ -56,8 +58,21 @@ Route::group(['middleware' => 'auth:staff'], function () {
     Route::get('staff/', [staffController::class, 'index'])
     ->name('staff.home');
 
-    Route::view('staff/dashboard', 'staff.dashboard') -> middleware('auth:staff');
+    Route::view('staff/dashboard', 'staff.dashboard');
+
+
+    //staff Account
+    Route::get('staff/staffacct', 'staffAcctController@index')->name('staffacct.index');
+    Route::get('staff/staffacct/create', 'staffAcctController@create')->name('staffacct.create');
+    Route::post('staff/staffacct/store', 'staffAcctController@store')->name('staffacct.store');
+    Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
+    Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
+    Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
+
+   
 });
+
+
 
 
  
