@@ -7,7 +7,7 @@ use App\staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Gate;
 
 class staffAcctController extends Controller
 {
@@ -18,7 +18,13 @@ class staffAcctController extends Controller
      */
     public function index()
     {
-        return view('staff.viewAcct');
+        if (Gate::allows('sysAdmin'))
+        {
+            return view('staff.viewAcct');
+        }else{
+            return redirect('staff/')->with('alert','You are not allow to perfom such action!');
+        }
+        
     }
 
     /**
@@ -28,8 +34,13 @@ class staffAcctController extends Controller
      */
     public function create()
     {
-        return view('staff.createAcct');
-    }
+        if (Gate::allows('sysAdmin'))
+        {
+            return view('staff.createAcct');
+        }else{
+            return redirect('staff/')->with('alert','You are not allow to perfom such action!');
+        }
+    }   
 
     /**
      * Store a newly created resource in storage.
@@ -39,6 +50,9 @@ class staffAcctController extends Controller
      */
     public function store(Request $request)
     {
+         // Return user to 403 error page
+         $this->authorize('sysAdmin');
+
         $input = $request->all();
 
 
@@ -89,8 +103,12 @@ class staffAcctController extends Controller
      */
     public function edit(staff $staff)
     {
-
-        return view('staff.editAcct', compact('staff'));
+        if (Gate::allows('sysAdmin'))
+        {
+            return view('staff.editAcct', compact('staff'));
+        }else{
+            return redirect('staff/')->with('alert','You are not allow to perfom such action!');
+        }
     }
 
     /**
@@ -102,6 +120,8 @@ class staffAcctController extends Controller
      */
     public function update(Request $request, staff $staff)
     {
+        $this->authorize('sysAdmin');
+
         $data = request()->validate([
 
             'name' => ['required', 'string', 'max:255'],
@@ -135,6 +155,8 @@ class staffAcctController extends Controller
      */
     public function destroy(staff $staff)
     {
+        $this->authorize('sysAdmin');
+
         $staff->delete();
 
         return redirect('staff.staffacct')->with('message', 'Account is Deleted!');

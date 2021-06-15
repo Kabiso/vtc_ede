@@ -10,6 +10,14 @@
              {{ session()->get('message') }}
             </div>  
             @endif
+
+            @if (session('alert'))
+            <div class="alert alert-danger mb-2">
+             {{ session()->get('alert') }}
+            </div>  
+            @endif
+
+            
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
 

@@ -46,5 +46,10 @@ class jobtitle extends Seeder
             'title' => 'Van Driver',
             'salary' => '8000',
         ]);
+
+        DB::table('jobtitles')->insert([
+            'title' => 'Customer Service',
+            'salary' => '8000',
+        ]);
     }
 }

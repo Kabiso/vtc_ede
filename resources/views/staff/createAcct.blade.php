@@ -100,12 +100,9 @@
                             <div class="col-md-6">
                                 <select class="form-control" id="jobtitle" name="jobtitle" required>
                                     <option value="">Please choose</option>
-                                    <option vaule="1">System Admin</option>
-                                    <option vaule="2">Operations Manager</option>
-                                    <option vaule="3">Operations Supervisor</option>
-                                    <option vaule="4">Account Executive</option>
-                                    <option vaule="5">Booking Clerk</option>
-                                    <option value="6">Van Driver</option>
+                                    @foreach(App\jobtitles:: all() as $jobtitles)
+                                    <option vaule="{{ $jobtitles->title }}">{{ $jobtitles->title }}</option>
+                                    @endforeach  
                                   </select>
                                 @error('jobtitle')
                                     <span class="invalid-feedback" role="alert">

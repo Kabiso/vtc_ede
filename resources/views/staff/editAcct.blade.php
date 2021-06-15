@@ -97,13 +97,11 @@
                             <div class="col-md-6">
                                 <select class="form-control" id="jobtitle" name="jobtitle" required>
                                     <option value="">Please choose</option>
-                                    <option vaule="System Admin" {{ $staff->jobtitles_id == '1' ? 'selected' : '' }}>System Admin</option>
-                                    <option vaule="Operations Manager" {{ $staff->jobtitles_id == '2' ? 'selected' : '' }}>Operations Manager</option>
-                                    <option vaule="Operations Supervisor" {{ $staff->jobtitles_id == '6' ? 'selected' : '' }}>Operations Supervisor</option>
-                                    <option vaule="Account Executive" {{ $staff->jobtitles_id == '4' ? 'selected' : '' }}>Account Executive</option>
-                                    <option vaule="Booking Clerk" {{ $staff->jobtitles_id == '5' ? 'selected' : '' }}>Booking Clerk</option>
-                                    <option vaule="Shipment Clerk" {{ $staff->jobtitles_id == '6' ? 'selected' : '' }}>Shipment Clerk</option>
-                                    <option value="Van Driver" {{ $staff->jobtitles_id == '7' ? 'selected' : '' }}>Van Driver</option>
+                                    @foreach(App\jobtitles:: all() as $jobtitles)
+
+                                    <option vaule="{{ $jobtitles->title }}" {{ $staff->jobtitles_id == $jobtitles->id ? 'selected' : '' }}>{{ $jobtitles->title }}</option>
+                                   
+                                    @endforeach
                                   </select>
                                 @error('jobtitle')
                                     <span class="invalid-feedback" role="alert">

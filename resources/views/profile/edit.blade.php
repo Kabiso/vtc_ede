@@ -8,14 +8,14 @@
                 <div class="card-header font-weight-bold text-white cloginbar">{{ __('Edit Profile') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/profile/{{ $user->id }}">
+                    <form method="POST" action="/profile/{{ Auth::user()->id }}">
                         @csrf
                         @method('PATCH')
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name')  ??  $user->custname }}" required autocomplete="name" autofocus>
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name')  ??  Auth::user()->custname }}" required autocomplete="name" autofocus>
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -29,13 +29,13 @@
                             <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('Gender') }}</label>
 
                             <div class="form-check form-check-inline pl-3">
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="M" {{ $user->custGender == 'M' ?  'checked': '' }} >
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="M" {{ Auth::user()->custGender == 'M' ?  'checked': '' }} >
                                     
                                 
                                 <label class="form-check-label" for="male">Male</label>
                               </div>
                               <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="female" value="F" {{ $user->custGender == 'F' ?  'checked': '' }}>
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="F" {{ Auth::user()->custGender == 'F' ?  'checked': '' }}>
                                 <label class="form-check-label" for="female">Female</label>
                               </div>   
                         </div>
@@ -44,7 +44,7 @@
                             <label for="contactNo" class="col-md-4 col-form-label text-md-right">{{ __('Contact Number') }}</label>
 
                             <div class="col-md-6">
-                                <input id="contactNo" type="tel" class="form-control @error('contactNo') is-invalid @enderror" name="contactNo" value="{{ $user->contactNo  ??  old('contactNo') }}" required autocomplete="contactNo">
+                                <input id="contactNo" type="tel" class="form-control @error('contactNo') is-invalid @enderror" name="contactNo" value="{{ Auth::user()->contactNo  ??  old('contactNo') }}" required autocomplete="contactNo">
 
                                 @error('contactNo')
                                     <span class="invalid-feedback" role="alert">
@@ -58,7 +58,7 @@
                             <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Contact Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="address" type="text" class="form-control   @error('address') is-invalid @enderror" name="address" value="{{ $user->custAddress ??  old('address') }}" required autocomplete="address" >
+                                <input id="address" type="text" class="form-control   @error('address') is-invalid @enderror" name="address" value="{{ Auth::user()->custAddress ??  old('address') }}" required autocomplete="address" >
 
                                 @error('address')
                                     <span class="invalid-feedback" role="alert">

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class profileController extends Controller
 {
@@ -21,7 +24,7 @@ class profileController extends Controller
         return view('profile.edit', compact('user'));
     }
 
-    public function update(User $user)
+    public function update(Request $request, User $user)
     {
         $data = request()->validate([
 
@@ -31,7 +34,17 @@ class profileController extends Controller
             'address' => ['required', 'string','max:255']
         ]);
 
-        auth()->user()->update($data);
+        $user = Auth::user();
+        $user->custname = $request['name'];
+        $user->contactNo = $request['contactNo'];
+        $user->custGender = $request['gender'];
+        $user->custAddress = $request['address'];
+        $user->save();
+
+        
+        
+
+        
 
         Return redirect("/")->with('message', 'Profile is Updated!');
     }

@@ -19,7 +19,7 @@ class staffac extends Seeder
             'password' => Hash::make('123456789'),
             'stfConactNo' => rand(12345678, 999999999),
             'stfGender' => 'M',
-            'jobtitles_id' => rand(0, 10),
+            'jobtitles_id' =>'1',
 
         ]);
     }

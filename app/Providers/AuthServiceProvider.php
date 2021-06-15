@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use App\staff;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +25,28 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+         /**
+        * Define Gate for  staff role
+        * Returns true if staff role is set to each role
+        **/ 
+       Gate::define('sysAdmin', function($staff) {
+           return $staff->jobtitles_id == '1';
+       });
+       
+        Gate::define('manager', function($staff) {
+            return $staff->jobtitles_id == '2';
+        });
+
+        Gate::define('acct', function($staff) {
+            return $staff->jobtitles_id == '4';
+        });
+
+        Gate::define('normalStaff', function($staff) {
+            return $staff->jobtitles_id == '2' ?? '3' ?? '5' ?? '6' ?? '8' ;
+        });
+
+        
+
+
     }
 }
