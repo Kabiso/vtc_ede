@@ -19,9 +19,10 @@ class CreatecustomerTable extends Migration
             $table->string('email')->unique();   //login name
             $table->string('password');
             $table->string('contactNo');
-            $table->integer('creditLimit')->default('0');
+            $table->integer('creditLimit')->default('1000');
             $table->char('custGender', 1);
             $table->string('custAddress');
+            $table->integer('credit')->default('1000');
             $table->timestamps();
         });
     }

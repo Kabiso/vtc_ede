@@ -420,13 +420,16 @@ public function storewithdetails(Request $request)
                   $orderdetail->weight = $weights[$item];
                   $order->orderdetails()->save($orderdetail);
               } 
-        
-        
+              
+              
         
         }
 
-      
-   
+        
+
+        
+
+
               
           
       }

@@ -26,12 +26,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('change-password', 'ChangePWController@index');
 Route::post('change-password', 'ChangePWController@store')->name('change.password');
 
-Route::get('/profile/{user}/edit', 'profileController@edit')->name('profile.edit');
-Route::patch('/profile/{user}', 'profileController@update')->name('profile.update');
 
 
 
 Route::group(['middleware' => 'auth'], function () {
+
     //order
     Route::get('/show_vehicle', 'VehicleController@showVehicle');
     Route::get('orders/createorderwithdetails', 'OrderController@createorderwithdetails')->name('orders.createorderwithdetails');
@@ -40,6 +39,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('orders', 'OrderController');
     Route::resource('orderdetails', 'OrderDetailController');
     Route::post('/posts/confirmation', 'PostController@confirmation');
+
+    //customer account management
+    Route::get('/profile/{user}/edit', 'profileController@edit')->name('profile.edit');
+    Route::patch('/profile/{user}', 'profileController@update')->name('profile.update');
+
 });
 
 
@@ -73,4 +77,13 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
     Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
     Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
+
+
+    //customer account management  Staff side
+    Route::view('staff/profile/all', 'profile.viewAll');
+    Route::get('staff/profile/{user}', 'profileController@show');
+    Route::get('staff/profile/{user}/edit', 'profileController@editCustomer')->name('profile.custStaffedit');
+    Route::patch('staff/profile/{user}', 'profileController@updateCustomer')->name('profile.custStaffupdate');
+
+
 });

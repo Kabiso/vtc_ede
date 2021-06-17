@@ -24,7 +24,8 @@ class User extends Authenticatable
         'contactNo',
         'creditLimit',
         'custGender',
-        'custAddress'
+        'custAddress',
+        'credit'
     ];
 
     /**

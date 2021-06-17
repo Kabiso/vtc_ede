@@ -104,6 +104,8 @@ function calculateCostTotal() {
     $("#costtotal").text(costTotal.toFixed(2));
 }
 
+
+
 </script>
 <h1>Create a Order</h1>
 
