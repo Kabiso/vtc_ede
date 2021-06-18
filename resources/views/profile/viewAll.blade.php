@@ -33,7 +33,7 @@
                           </thead>
 
                           <tbody>
-                            @foreach(App\user:: all() as $user)
+                            @foreach($users as $user)
                             <tr>
                                 <td>{{$user->id}}</td>
                                 <td>{{$user->custname}}</td>
@@ -42,10 +42,10 @@
                                 <td>{{$user->contactNo}}</td>
                                 <td>{{$user->credit}}</td>
                                 <td>{{$user->creditLimit}}</td>
-                                <td><button class="btn btn-success" onclick="window.location='/staff/profile/{{ $user->id }}'"  >View</button></td>
+                                <td><button class="btn btn-info text-white" onclick="window.location='/staff/profile/{{ $user->id }}'"  >View</button></td>
                                 <td><button class="btn btn-success" onclick="window.location='/staff/profile/{{ $user->id }}/edit'"  >Edit</button></td>
                                 <td>
-                                    <form action="" method="POST" onsubmit="return confirm('Confirm to delete? ')">
+                                    <form action="/staff/profile/{{ $user->id }}" method="POST" onsubmit="return confirm('Confirm to delete? ')">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -56,7 +56,7 @@
                           </tbody>
 
                     </table>
-                    
+                    {{ $users->links()}}
                 </div>
             </div>
         </div>

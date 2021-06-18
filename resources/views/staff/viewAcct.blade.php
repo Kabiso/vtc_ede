@@ -23,7 +23,7 @@
                               <th scope="col">Name</th>
                               <th scope="col">Email</th>
                               <th scope="col">Gender</th>
-                              <th scope="col">Job Title</th>
+                              <th scope="col">Jobtitle</th>
                               <th scope="col">Contact Number</th>
                               <th scope="col" class="pl-3">Edit</th>
                               <th scope="col">Delete</th>
@@ -31,7 +31,7 @@
                           </thead>
 
                           <tbody>
-                            @foreach(App\staff:: all() as $staff)
+                            @foreach($staffs as $staff)
                             <tr>
                                 <td>{{$staff->id}}</td>
                                 <td>{{$staff->stfName}}</td>
@@ -49,10 +49,12 @@
                                 </td>
                             </tr>
                             @endforeach
+                            
                           </tbody>
-
+                         
                     </table>
-                    
+                    {{$staffs->links()}}
+                   
                 </div>
             </div>
         </div>

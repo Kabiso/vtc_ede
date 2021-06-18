@@ -20,10 +20,12 @@ class staffAcctController extends Controller
     {
         if (Gate::allows('sysAdmin'))
         {
-            return view('staff.viewAcct');
+            $staffs = staff::paginate(20);
+            return view('staff.viewAcct')->with('staffs',$staffs);
         }else{
             return redirect('staff/')->with('alert','You are not allow to perfom such action!');
         }
+        
         
     }
 
@@ -55,20 +57,18 @@ class staffAcctController extends Controller
 
         $input = $request->all();
 
+        $data = request()->validate([
 
-
-        $rules = array(
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:staff'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'contactNo' => ['required', 'digits:8'],
             'gender' => 'required|in:M,F',
             'jobtitle' => ['required']
-        );
-
+        ]);
 
         $job_id = jobtitles::where('title', $request['jobtitle'])->first()->id;
-        $validator = Validator::make($input, $rules);
+       
 
 
         $staff = new staff;
@@ -159,6 +159,6 @@ class staffAcctController extends Controller
 
         $staff->delete();
 
-        return redirect('staff.staffacct')->with('message', 'Account is Deleted!');
+        return redirect('staff/staffacct')->with('message', 'Account is Deleted!');
     }
 }

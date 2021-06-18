@@ -43,5 +43,7 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+     
     
 }

@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 
 class profileController extends Controller
@@ -46,6 +47,8 @@ class profileController extends Controller
 
         Return redirect("/")->with('message', 'Profile is Updated!');
     }
+
+
 
 
     public function show(User $user){
@@ -89,5 +92,53 @@ class profileController extends Controller
         Return redirect("staff/profile/all")->with('message', 'Customer profile is updated!');
     }
 
+
+    public function viewAll()
+    {
+        $users = user::paginate(1);
+        return view('profile.viewAll')->with('users',$users);
+    }
+
+    public function createCustomer()
+    {
+        return view('auth.register');
+    }
+
+    public function destroy(user $user)
+    {
+
+        $user->delete();
+
+        return redirect('staff/profile/all')->with('message', 'Account is Deleted!');
+    }
+    
+
+    public function storeCustomer(Request $request)
+    {
+        $data = request()->validate([
+
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customer'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'contactNo' =>['required','digits:8' ],
+            'gender'=> 'required|in:M,F' ,
+            'address' => ['required', 'string','max:255']
+
+
+        ]);
+        
+        $user = New user;
+        $user->custname = $request['name'];
+        $user->contactNo = $request['contactNo'];
+        $user->email = $request['email'];
+        $user->password = Hash::make($request['password']);
+        $user->custGender = $request['gender'];
+        $user->custAddress = $request['address'];
+        
+
+        $user->save();
+
+        Return redirect("staff/profile/all")->with('message', 'Customer Account is created!');
+    }
 
 }

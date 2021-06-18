@@ -101,6 +101,18 @@
                             </div>
                           </li>
                           @endcan
+
+                          @can('sysAdmin', 'normalStaff')
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customer Account</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item " href="{{ URL::to('staff/profile/create') }}">Create New Customer Account</a>
+                              <!-- Dropdown menu item for create new order with details -->
+                                <a class="dropdown-item" href="{{ URL::to('staff/profile/all') }}">View All Staff Account</a>
+                            </div>
+                          </li>
+                          @endcan
+
                           
 
 

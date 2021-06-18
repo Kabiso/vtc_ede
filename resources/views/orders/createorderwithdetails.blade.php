@@ -107,6 +107,10 @@ function calculateCostTotal() {
 
 
 </script>
+<!-- Start of show message -->
+
+
+
 <h1>Create a Order</h1>
 
 {!! Form::open(['action' =>'OrderController@storewithdetails', 'method' => 'POST','files'=>true])!!}

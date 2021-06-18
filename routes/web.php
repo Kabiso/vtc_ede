@@ -80,10 +80,14 @@ Route::group(['middleware' => 'auth:staff'], function ()
 
 
     //customer account management  Staff side
-    Route::view('staff/profile/all', 'profile.viewAll');
-    Route::get('staff/profile/{user}', 'profileController@show');
+    Route::view('staff/profile/create', 'profile.create')->name('profile.custStaffcreate');
+    Route::post('staff/profile/store', 'profileController@storeCustomer')->name('profile.custStaffsore');
+    Route::get('staff/profile/all', 'profileController@viewAll')->name('profile.custStaffviewAll');
+    Route::get('staff/profile/{user}', 'profileController@show')->name('profile.custStaffshow');
     Route::get('staff/profile/{user}/edit', 'profileController@editCustomer')->name('profile.custStaffedit');
     Route::patch('staff/profile/{user}', 'profileController@updateCustomer')->name('profile.custStaffupdate');
+    Route::delete('staff/profile/{user}', 'profileController@destroy')->name('profile.custStaffdelete');
 
+    
 
 });
