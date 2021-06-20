@@ -26,14 +26,16 @@ class CreateOrderdetailsTable extends Migration
               $table->integer('itemQty');
             
             // Create a double for the order item cost
-            $table->double('cost', 10, 2);
-            
-            // Create a double for the order item price
-            $table->double('price', 10, 2);
-
-             // Create a double for the order item price
-             $table->double('weight', 10, 2);
-            
+              // Create a double for the order item cost
+              $table->double('cost', 10, 2);
+              $table->double('linecost', 10, 2);
+              // Create a double for the order item price
+              $table->double('lineprice', 10, 2);
+              $table->double('price', 10, 2);
+               // Create a double for the order item price
+               $table->double('lineweight', 10, 2);
+               $table->double('weight', 10, 2);
+              // Create both nullable created at and updated at columns to store the created and last updated time stamp
             // Create both nullable created at and updated at columns to store the created and last updated time stamp
             $table->timestamps(0);
 

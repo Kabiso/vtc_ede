@@ -20,6 +20,9 @@ class OrderDetailsSeeder extends Seeder
         'cost' => rand(200, 1000),
         'price' => rand(200, 1000),
         'weight' => rand(200, 1000),
+        'linecost' => rand(200, 1000),
+        'lineprice' => rand(200, 1000),
+        'lineweight' => rand(200, 1000),
         'orderid' => rand(1,10)
     ]);
 }

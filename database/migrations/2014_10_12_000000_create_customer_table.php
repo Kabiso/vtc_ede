@@ -14,7 +14,7 @@ class CreatecustomerTable extends Migration
     public function up()
     {
         Schema::create('customer', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('custname');
             $table->string('email')->unique();   //login name
             $table->string('password');
@@ -22,7 +22,6 @@ class CreatecustomerTable extends Migration
             $table->integer('creditLimit')->default('1000');
             $table->char('custGender', 1);
             $table->string('custAddress');
-            $table->integer('credit')->default('1000');
             $table->timestamps();
         });
     }

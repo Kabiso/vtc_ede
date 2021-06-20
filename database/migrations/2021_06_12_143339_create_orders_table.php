@@ -21,10 +21,24 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('orderid');
             
             // Create a string column for vehicle registration number
-            $table->string('custid', 10);
+            $table->unsignedBigInteger('custid');
+
+
+            // Create a string column for customer name
+             $table->string('custname', 255);
             
+            // Create a integer column for customer phone
+             $table->string('custphone',20);
+                         
+                 
+            // Create a string column for vehicle model
+             $table->string('custpostcode', 4);
+                 
+             $table->string('custaddress', 255); 
+
+             $table->string('custarea', 255)->nullable();
             // Create a 3 characters column for vehicle registration state
-            $table->string('receid', 10);
+            $table->string('receid', 10)->nullable();
             // Create a string column for vehicle brand
 
             // Create a integer column for vehicle manufactured year
@@ -40,29 +54,27 @@ class CreateOrdersTable extends Migration
             
             $table->string('receaddress', 255);
             
-            // Create a string column for customer name
-            $table->string('custname', 255);
-            
-            // Create a integer column for customer phone
-            $table->string('custphone');
-                    
-            
-            // Create a string column for vehicle model
-            $table->string('custpostcode', 4);
-            
-            $table->string('custaddress', 255); 
+            $table->string('recearea', 255)->nullable();
             
              // Create a string column for vehicle model
          
-             $table->integer('tax');
+             $table->integer('tax')->nullable();
 
-             $table->string('paymemt',40);
-             $table->string('cardtype',40);
-             $table->string('vaDate',40);
+             $table->string('paymemt',255);
+             $table->string('cardtype',255)->nullable();
+             $table->string('vaDate',40)->nullable();
 
              $table->integer('totalweight');
 
-             $table->string('cardnum',40);
+             $table->string('cardnum',40)->nullable();
+             $table->string('chequednum',40)->nullable();   
+
+             $table->string('shiptype', 255);
+             $table->string('shipcountries',255);
+             $table->double('shipfee', 10, 2)->nullable();
+             $table->string('paymentstatus',255);
+             
+             $table->double('totalqty', 10, 2)->nullable();
             // Create a nullable double for the order total cost
             $table->double('totalcost', 10, 2)->nullable();
             
@@ -71,12 +83,14 @@ class CreateOrdersTable extends Migration
             
             // Create a nullable datetime column for order created date
             $table->dateTime('createddate', 0)->nullable();
-            
+            $table->string('remark', 255)->nullable();
             // Create a nullable datetime column for order finalized date
             $table->dateTime('finalizeddate', 0)->nullable();
             
             // Create a integer column for order status
             $table->integer('orderstatus')->default(0);
+
+            $table->foreign('custid')->references('id')->on('customer');
             
          });
     }

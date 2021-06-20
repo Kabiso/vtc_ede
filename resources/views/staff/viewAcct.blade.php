@@ -15,7 +15,8 @@
                 <div class="card-header text-white font-weight-bold sloginbar">{{ __('View Staff Account') }}</div>
 
                 <div class="card-body">
-
+                   
+                  
                     <table class="table">
                         <thead>
                             <tr>
@@ -30,7 +31,7 @@
                             </tr>
                           </thead>
 
-                          <tbody>
+                          <tbody id="tb">
                             @foreach($staffs as $staff)
                             <tr>
                                 <td>{{$staff->id}}</td>
@@ -60,4 +61,30 @@
         </div>
     </div>
 </div>
+<!-----------
+<script>
+   $(document).ready(function(){
+   fetch_customer_data();
+
+function fetch_customer_data(query = '')
+{
+ $.ajax({
+  url:"/staff/action",
+  method:'GET',
+  data:{query:query},
+  dataType:'json',
+  success:function(data)
+  {
+   $('tbody').html(data.table_data);
+  }
+ })
+}
+
+$(document).on('keyup', '#search', function(){
+ var query = $(this).val();
+ fetch_customer_data(query);
+});
+});
+</script>
+---->
 @endsection

@@ -9,7 +9,7 @@ class OrderDetail extends Model
     protected $table = 'orderdetails'; // Define the table name
     protected $primaryKey = "detailid";
     public $incrementing = false;
-    protected $fillable = ['itemHamoCode', 'desc','itemQty', 'cost', 'price', 'weight',' created_at','updated_at'];
+    protected $fillable = ['itemHamoCode', 'desc','itemQty', 'cost', 'linecost','price','lineprice', 'weight','lineweight',' created_at','updated_at',];
     
     // Retrieve the order that belongs to the order detail
     public function order()

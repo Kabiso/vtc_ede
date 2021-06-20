@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Order;
 
 
 class profileController extends Controller
@@ -53,7 +54,9 @@ class profileController extends Controller
 
     public function show(User $user){
 
-        return view('profile.view',compact('user'));
+        $orders = Order::Where('custid',$user->id)->orderBy('orderid','desc')->paginate(3);
+
+        return view('profile.view',compact('user','orders'));
     }
 
     public function editCustomer(User $user)
@@ -95,7 +98,8 @@ class profileController extends Controller
 
     public function viewAll()
     {
-        $users = user::paginate(1);
+       
+        $users = user::paginate(15);
         return view('profile.viewAll')->with('users',$users);
     }
 

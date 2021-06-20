@@ -23,6 +23,19 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    <script>
+
+        $(document).ready(function () {
+    
+           var credit =  $('#credit').html();
+            console.log(credit);
+           if(credit < 0 )
+           {
+               $('#credit').css("color","red");
+           }
+    
+        });
+    </script>
     
 </head>
 <body>
@@ -47,6 +60,10 @@
                           </li>
                           <li class="nav-item">
                             <a class="nav-link text-white" href="{{ URL::to('orders/') }}">View All Orders</a>
+                          </li>
+
+                          <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ URL::to('monthlypay/') }}">Monthly Payment Orders</a>
                           </li>
 
                           <li class="nav-item dropdown">
@@ -77,7 +94,13 @@
                             </li>
                             
                         @else  
-                        
+                            <li class="nav-item mr-5">
+                                <span class="nav-link text-white">
+                                    <span>Credit :</span>
+                                    <span id="credit">{{ 1000 - App\Order::WHERE('custid',Auth::user()->id)->sum('shipfee')}}</span>
+                                    <span>/ {{Auth::user()->creditLimit}}</span>
+                                </span>
+                            </li>
                         
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -134,5 +157,7 @@
             @yield('content')
         </main>
     </div>
+
+
 </body>
 </html>

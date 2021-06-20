@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\staffAcctController;
+use App\Http\Controllers\monthlypayController;
 
 
 /*
@@ -23,13 +24,20 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//customer change password
 Route::get('change-password', 'ChangePWController@index');
 Route::post('change-password', 'ChangePWController@store')->name('change.password');
 
+Route::group(['middleware' => 'auth:web'], function () {
 
+//customer account management
+Route::get('/profile/{user}/edit', 'profileController@edit')->name('profile.edit');
+Route::patch('/profile/{user}', 'profileController@update')->name('profile.update');
 
+});
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth:web,staff'], function () {
 
     //order
     Route::get('/show_vehicle', 'VehicleController@showVehicle');
@@ -40,11 +48,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('orderdetails', 'OrderDetailController');
     Route::post('/posts/confirmation', 'PostController@confirmation');
 
-    //customer account management
-    Route::get('/profile/{user}/edit', 'profileController@edit')->name('profile.edit');
-    Route::patch('/profile/{user}', 'profileController@update')->name('profile.update');
+    //for print airwaybill
+    Route::resource('airwaybill', 'airwaybillController');
+
+    //for print commercialinvoice
+     Route::resource('commercialinvoice', 'CommercialinvoiceController');
+
+    //View Monthly Payment
+   Route::get('monthlypay','monthlypayController@view')->name('monthlypay.view');
+
+   Route::get('viewOrderDetail/{order}','orderController@viewOrderDetail')->name('order.viewDetail');
 
 });
+
+
 
 
 //  for staff 
@@ -77,6 +94,8 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
     Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
     Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
+    // Route::get('staff/action','staffAcctController@action')->name('staffacct.search');   
+    
 
 
     //customer account management  Staff side
@@ -87,7 +106,6 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/profile/{user}/edit', 'profileController@editCustomer')->name('profile.custStaffedit');
     Route::patch('staff/profile/{user}', 'profileController@updateCustomer')->name('profile.custStaffupdate');
     Route::delete('staff/profile/{user}', 'profileController@destroy')->name('profile.custStaffdelete');
-
     
 
 });

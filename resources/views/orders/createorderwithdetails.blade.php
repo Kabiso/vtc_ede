@@ -1,6 +1,22 @@
-@extends('layouts.app')
+@extends( (Auth::guard('web')->check()) ? 'layouts.app' : 'layouts.staffhead')
 
+   
 @section('content')
+
+
+<style>
+
+#creditcard{
+    display: none;
+}
+
+#cheque
+{
+    display: none;
+}
+
+</style>
+
 
 <script>
 $(document).ready(function () {
@@ -11,15 +27,15 @@ $(document).ready(function () {
 
         var newRow = $("<tr>");
         var cols = "";
-        cols += '<td><input type="text"  style="width:250px" name="itemHamoCode[]' + counter + '"/></td>';
-        cols += '<td><input type="text"  style="width:50px" name="desc[]' + counter + '"/></td>';
-        cols += '<td><input type="number"  style="width:50px" name="itemQty[]' + counter + '"/></td>';
-        cols += '<td><input type="number"  style="width:100px" name="weight[]' + counter + '"/></td>';
-        cols += '<td><input type="number"  style="width:100px" name="cost[]' + counter + '"/></td>';
-        cols += '<td><input type="number"  style="width:100px" name="price[]' + counter + '"/></td>';
-        cols += '<td>$<input type="text" name="linetotal[]' + counter + '" readonly="readonly"/></td>';
-        cols += '<td>$<input type="text" name="pricetotal[]' + counter + '" readonly="readonly"/></td>';
-        cols += '<td>$<input type="text" name="costtotal[]' + counter + '" readonly="readonly"/></td>';
+        cols += '<td><input type="text"  size="10"  name="itemHamoCode[]' + counter + '"/></td>';
+        cols += '<td><input type="text"   size="13"  name="desc[]' + counter + '"/></td>';
+        cols += '<td><input type="number"  size="3"  name="itemQty[]' + counter + '"/></td>';
+        cols += '<td><input type="number"   size="5" name="weight[]' + counter + '"/></td>';
+        cols += '<td><input type="number"   size="3" name="cost[]' + counter + '"/></td>';
+        cols += '<td><input type="number"     size="5" name="price[]' + counter + '"/></td>';
+        cols += '<td><input type="text" size="5"  name="lineweight[]' + counter + '" readonly="readonly"/></td>';
+        cols += '<td><input type="text" size="5" name="lineprice[]' + counter + '" readonly="readonly"/></td>';
+        cols += '<td><input type="text"  size="5" name="linecost[]' + counter + '" readonly="readonly"/></td>';
         cols += '<td><a class="deleteRow"> x </a></td>';
         newRow.append(cols);
 
@@ -49,13 +65,21 @@ $(document).ready(function () {
         calculateRow($(this).closest("tr"));
         calculateCostTotal();
     });
+    $("table.order-list").on("click", "a.deleteRow", function (event) {
+        $(this).closest("tr").remove();
+        calculateQtyTotal();
+    });
+    $("table.order-list").on("change", 'input[name^="itemQty[]"]', function (event) {
+        calculateRow($(this).closest("tr"));
+        calculateQtyTotal();
+    });
 
     $("table.order-list").on("click", "a.deleteRow", function (event) {
         $(this).closest("tr").remove();
         calculateCostTotal();
     });
 
-
+    
 
 
 
@@ -70,10 +94,11 @@ function calculateRow(row) {
     var price = +row.find('input[name^="price[]"]').val();
     var weight= +row.find('input[name^="weight[]"]').val();
     var qty = +row.find('input[name^="itemQty[]"]').val();
-    row.find('input[name^="linetotal[]"]').val((weight * qty).toFixed(2));
-    row.find('input[name^="pricetotal[]"]').val((price * qty).toFixed(2));
-    row.find('input[name^="costtotal[]"]').val((cost * qty).toFixed(2));
-    row.find('input[name^="totalweight[]"]').val((weight * qty).toFixed(2));
+    row.find('input[name^="lineweight[]"]').val((weight * qty).toFixed(2));
+    row.find('input[name^="lineprice[]"]').val((price * qty).toFixed(2));
+    row.find('input[name^="linecost[]"]').val((cost * qty).toFixed(2));
+    row.find('input[name^="lineqty[]"]').val((qty).toFixed(2));
+  // row.find('input[name^="totalweight[]"]').val((weight * qty).toFixed(2));
 
 
 
@@ -81,231 +106,409 @@ function calculateRow(row) {
 
 function calculateGrandTotal() {
     var grandTotal = 0;
-    $("table.order-list").find('input[name^="linetotal[]"]').each(function () {
+    $("table.order-list").find('input[name^="lineweight[]"]').each(function () {
         grandTotal += +$(this).val();
     });
     $("#grandtotal").text(grandTotal.toFixed(2));
-    $(".col-4 totalweight").val(grandTotal.toFixed(2));
+    $("#tweight .form-control").val(grandTotal.toFixed(2));
+    
 }
 
 function calculatePriceTotal() {
     var priceTotal = 0;
-    $("table.order-list").find('input[name^="pricetotal[]"]').each(function () {
+    $("table.order-list").find('input[name^="lineprice[]"]').each(function () {
         priceTotal += +$(this).val();
     });
     $("#pricetotal").text(priceTotal.toFixed(2));
-
+    $("#tprice .form-control").val( priceTotal.toFixed(2));
 }
 function calculateCostTotal() {
     var costTotal = 0;
-    $("table.order-list").find('input[name^="costtotal[]"]').each(function () {
+    $("table.order-list").find('input[name^="linecost[]"]').each(function () {
         costTotal += +$(this).val();
     });
     $("#costtotal").text(costTotal.toFixed(2));
+    $("#tcost .form-control").val( costTotal.toFixed(2));
 }
+function calculateQtyTotal() {
+    var qtyTotal = 0;
+    $("table.order-list").find('input[name^="itemQty[]"]').each(function () {
+        qtyTotal += +$(this).val();
+    });
+    $("#tqty .form-control").val( qtyTotal);
+}
+
+//payment selection
+$('#creditcard').hide();
+$(function(){
+    var pay ='Paid';
+    var pay2 ='Waiting to Pay';
+    $('#payment .form-control').change(function(){
+       var opt = $(this).val();
+        if(opt == 'Credit Card'){
+
+            var pay ='Paid';
+            $('#creditcard').show();
+            $('#cheque').hide();
+            
+
+        $("#paystatust select").val(pay);
+  
+     
+     
+        }else if(opt == 'Cash'){
+            var pay ='Paid';
+            $('#creditcard').hide();
+            $('#cheque').hide();
+            $("#paystatust select").val(pay);
+  
+        }else if(opt == 'Cheque'){
+            var pay ='Paid';
+            $('#creditcard').hide();
+            $('#cheque').show();
+            $('#paystatust select').val(pay);
+  
+                  
+           }else if(opt == 'Monthely Pay'){
+            var pay ='Waiting to Pay';
+            $('#creditcard').hide();
+            $('#cheque').hide();
+  
+          
+        $("#paystatust select").val(pay);
+           }else if(opt == 'Pay Pal'){
+            var pay ='Paid';
+            $('#creditcard').hide();
+            $('#cheque').hide();  
+          
+        $("#paystatust select").val(pay);
+           }else if(opt == 'Wait to Calculate the Weight of the goods'){
+            var pay ='Wait to Calculate the Weight';
+            $('#creditcard').hide();
+            $('#cheque').hide();
+              
+          
+        $("#paystatust select").val(pay);
+        }
+    });
+});
+//end payment selection
+
+       
+
 
 
 
 </script>
-<!-- Start of show message -->
+<div class="container col-md-10">
 
 
-
-<h1>Create a Order</h1>
+<h1>Create a Shipment Order</h1>
 
 {!! Form::open(['action' =>'OrderController@storewithdetails', 'method' => 'POST','files'=>true])!!}
 @csrf
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('custid', 'Cust number') }}</div>
-    <div class="col-4">{{ Form::text('custid', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+<div class="card">
+<div class="card-header text-white cloginbar">Customer Information</div>
+
+
+<div class="row mt-3 ">    
+    <div class="col-4 text-right ">{{ Form::label('custid', 'Customor Account No.') }}</div>
+    @if((Auth::guard('web')->check()))
+    <div class="col-4">{{ Form::text('custid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div>
+    @else
+    <div class="col-4">{{ Form::text('custid',old('custid'),array('class' => 'form-control')) }}</div>
+    @endif
 </div>
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('receid', 'receier id') }}</div>
-    <div class="col-4">{{ Form::text('receid', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
+<!-----
+<div class="row mt-3">
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('receCompanyname', 'rece Company Name') }}</div>
-    <div class="col-4">{{ Form::text('receCompanyname', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
+    <div class="col-4 text-right">{{ Form::label('creditLimit', 'Customer Credit Limit') }}</div>
+    <div class="col-4">{{ Form::text('creditLimit', Auth::user()->creditLimit, array('class' => 'form-control','readonly')) }}</div>
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('recename', 'rece name') }}</div>
-    <div class="col-4">{{ Form::text('recename', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('recephone', 'rece phone') }}</div>
-    <div class="col-4">{{ Form::text('recephone', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('recepostcode', 'rece postcode') }}</div>
-    <div class="col-4">{{ Form::text('recepostcode', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('receaddress', 'rece address') }}</div>
-    <div class="col-4">{{ Form::text('receaddress', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('custname', 'cust name') }}</div>
-    <div class="col-4">{{ Form::text('custname', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
+</div> --->
 
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('custphone', 'cust phone') }}</div>
-    <div class="col-4">{{ Form::text('custphone', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('custpostcode', 'cust postcode') }}</div>
-    <div class="col-4">{{ Form::text('custpostcode', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('custname', 'Customer Name') }}</div>
+    <div class="col-4">{{ Form::text('custname', Auth::user()->custname, array('class' => 'form-control')) }}</div>
+
 </div>
 
 
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('custaddress', 'cust address') }}</div>
-    <div class="col-4">{{ Form::text('custaddress', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('custphone', 'Customer Phone Number') }}</div>
+    <div class="col-4">{{ Form::text('custphone',  Auth::user()->contactNo, array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Customer Post Code') }}</div>
+    <div class="col-4">{{ Form::text('custpostcode', '0000', array('class' => 'form-control')) }}</div>
+
 </div>
 
 
+
+<div class="row mt-3 mb-3">
+
+    <div class="col-4 text-right">{{ Form::label('custaddress', 'Customer Address') }}</div>
+    <div class="col-4">{{ Form::text('custaddress', Auth::user()->custAddress, array('class' => 'form-control')) }}</div>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card ">
+<div class="card-header text-white cloginbar">Pick up Booking</div>
+<div class="card-body">
 <div class="row">
-    <div class="col-2"></div>
+
+    <div class="col-4 text-right ">{{ Form::label('location', 'Pickup Location') }}</div>
+    <div class="col-4 ">{{ Form::text('location', old('location'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('bookingtime', 'Pickup Time') }}</div>
+   
+    <div class="col-4">{{ Form::input('datetime-local','bookingtime',old('bookingtime'), array('class' => 'form-control')) }}</div>
+
+</div>
+</div>
+
+
+<div class="card">
+<div class="card-header text-white cloginbar">Receiver Information</div>
+
+<!--<div class="row">
+
+    <div class="col-4 text-right">{{ Form::label('receid', 'Receiver Number') }}</div>
+    <div class="col-4">{{ Form::text('receid', old('receid'), array('class' => 'form-control')) }}</div>
+
+</div>
+-->
+
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('receCompanyname', 'Receiver Company Name') }}</div>
+    <div class="col-4">{{ Form::text('receCompanyname', old('receCompanyname'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('recename', 'Receiver Name') }}</div>
+    <div class="col-4">{{ Form::text('recename', old('recename'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('recephone', 'Receiver Phone Number/Fax Number') }}</div>
+    <div class="col-4">{{ Form::text('recephone', old('recephone'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('recepostcode', 'Receiver Post Code') }}</div>
+    <div class="col-4">{{ Form::text('recepostcode', old('recepostcode'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row my-3">
+
+    <div class="col-4 text-right">{{ Form::label('receaddress', 'Receiver ddress') }}</div>
+    <div class="col-4">{{ Form::text('receaddress', old('receaddress'), array('class' => 'form-control')) }}</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+<div class="card">
+<div class="card-header text-white cloginbar">Payment Information</div>
+<!--<div class="row">
+
     <div class="col-4 text-right">{{ Form::label('tax', 'tax') }}</div>
-    <div class="col-4">{{ Form::number('tax', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+    <div class="col-4">{{ Form::number('tax', old('tax'), array('class' => 'form-control')) }}</div>
+
+</div> -->
+
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('paymemt', 'Paymemt Mothed') }}</div>
+    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), 'Cash', array('class' => 'form-control')); !!}</div>
+    <!--<div class="col-4">{{ Form::text('paymemt', old('payment'), array('class' => 'form-control')) }}</div> -->
+
 </div>
 
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('paymemt', 'paymemt') }}</div>
-    <div class="col-4"> {!! Form::select('paymemt', array('Cash' => 'Cash', 'Cheque' => 'Cheque', 'Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), 'C水redit Card', array('class' => 'form-control')); !!}</div>
-    <!--<div class="col-4">{{ Form::text('paymemt', null, array('class' => 'form-control')) }}</div> -->
-    <div class="col-2"></div>
+<div id="creditcard">
+<div class="row mt-3 ">
+
+    <div class="col-4 text-right"  >{{ Form::label('cardtype', 'Credit Card Type') }}</div>
+    <div class="col-4" >{!! Form::select('paymemt', array('Visa' => 'Visa', 'Master' => 'Master', 'AE' => 'AE', 'UniPay' => 'UniPay'), 'Visa', array('class' => 'form-control')); !!}</div>
+
+</div>
+<div class="row mt-3">
+
+    <div class="col-4 text-right" >{{ Form::label('cardnum', 'Credit Card Numnber') }}</div>
+    <div class="col-4" >{{ Form::text('cardnum', old('cardnum'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('vaDate', 'Valid Thru Date') }}</div>
+    <div class="col-4"  >{{ Form::input('date','vaDate', old('vaDate'), array('class' => 'form-control')) }}</div>
+
+</div>
+</div>
+
+<div id="cheque">
+<div class="row mt-3 ">
+
+    <div class="col-4 text-right">{{ Form::label('chequednum', 'Cheque Number') }}</div>
+    <div class="col-4" >{{ Form::text('chequednum', old('chequednum'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right" >{{ Form::label('paymentstatus', 'Payment Status') }}</div>
+    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight'), 'Paid', array('class' => 'form-control')); !!}</div>
+
+</div>
 </div>
 
 
+<div class="row my-3">
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('cardtype', 'cardtype') }}</div>
-    <div class="col-4">{{ Form::text('cardtype', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('vaDate', 'vaDate') }}</div>
-    <div class="col-4">{{ Form::text('vaDate', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
-
-
-<div class="row">
-    <div class="col-2"></div>
     <div class="col-4 text-right">{{ Form::label('totalweight', 'totalweight') }}</div>
-    <div class="col-4">{{ Form::number('totalweight', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+    <div class="col-4" id="tweight">{{ Form::number('totalweight', old('totalweight'), array('class' => 'form-control','readonly')) }}</div>
+
 </div>
 
 
+<div class="card">
+<div class="card-header text-white cloginbar">Shipment Information</div>
+<div class="card-body">
+
+
+ 
+           
+  
 
 <div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('cardnum', 'cardnum') }}</div>
-    <div class="col-4">{{ Form::text('cardnum', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
+
+    <div class="col-4 text-right">{{ Form::label('shiptype', 'Shipment Type') }}</div>
+    <div class="col-4">{!! Form::select('shiptype', array('Global Service' => 'DOCUMENT ENVELOPE GLOBAL Service', 'EDE EXPRESS FREIGHT Service' => 'EDE EXPRESS FREIGHT Service'), 'DOCUMENT ENVELOPE Global Service', array('class' => 'form-control')); !!}</div>
+
 </div>
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('totalcost', 'totalcost') }}</div>
-    <div class="col-4">{{ Form::number('totalcost', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
-</div>
+<div class="row mt-3">
 
+    <div class="col-4 text-right">{{ Form::label('shipcountries', 'Shipment Countries') }}</div>
+    <div class="col-4">{!! Form::select('shipcountries', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA'), 'JAPAN', array('class' => 'form-control')); !!}</div>
 
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col-4 text-right">{{ Form::label('totalamount', 'totalamount') }}</div>
-    <div class="col-4">{{ Form::number('totalamount', null, array('class' => 'form-control')) }}</div>
-    <div class="col-2"></div>
 </div>
 
 
+<div class="row mt-3">
 
-<br/><br/>
+    <div class="col-4 text-right">{{ Form::label('shipfee', 'Shipment Fee') }}</div>
+    <div class="col-4" >{{ Form::number('shipfee', old('shipfee'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('totalqty', 'totalqty') }}</div>
+    <div class="col-4" id="tqty">{{ Form::number('totalqty', old('totalqty'), array('class' => 'form-control','readonly')) }}</div>
+
+</div>
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('totalcost', 'Total Cost') }}</div>
+    <div class="col-4" id="tcost">{{ Form::number('totalcost', old('totalcost'), array('class' => 'form-control','readonly')) }}</div>
+
+</div>
+
+
+<div class="row my-3">
+
+    <div class="col-4 text-right">{{ Form::label('totalamount', 'Total Amount') }}</div>
+    <div class="col-4" id="tprice">{{ Form::number('totalamount', old('totalamount'), array('class' => 'form-control','readonly')) }}</div>
+
+</div>
+</div>
+</div>
+
+
 
 <!-- Detail Form -->
 <div class="card">
-<div class="card-header">Order Items</div>
-<table class="order-list">
-    <thead>
-    <th>itemHamoCode</th>
-                        <th>Desc</th>
-                        <th>item QTY</th>
-                        <th>weight</th>
-                        <th>Cost</th>
-                        <th>Price</th>
-                        <th>wiegth total</th>
-                        <th>price total</th>
-                        <th>cost total</th>
+<div class="card-header text-white cloginbar">Shipment Items</div>
+<table class="order-list mt-3">
+    <thead >
+    <th ><p style="font-size:10px">Harmonized Code </p></th>
+                        <th><p style="font-size:10px">Full Description of Goods</p></th>
+                        <th><p style="font-size:10px">No of items</p></th>
+                        <th><p style="font-size:5px">Unit Weight</p></th>
+                        <th><p style="font-size:5px">Unit Cost</p></th>
+                        <th><p style="font-size:5px">Unit Price</p></th>
+                        <th><p style="font-size:5px">Wiegth total</p></th>
+                        <th><p style="font-size:5px">Price total</p></th>
+                        <th><p style="font-size:5px">Cost total</p></th>
     </thead>
 
     <tbody>
         <tr>
-            <td><input type="text" name="itemHamoCode[]" /></td>
-            <td><input type="text" name="desc[]" /></td>
-            <td><input type="number" name="itemQty[]" /></td>
-            <td><input type="number" name="weight[]" /></td>
-            <td><input type="number" name="cost[]" /></td>
-            <td><input type="number" name="price[]" /></td>
-            <td><input type="text" name="linetotal[]" readonly="readonly" /></td>
-            <td><input type="text" name="pricetotal[]" readonly="readonly" /></td>
-            <td><input type="text" name="costtotal[]" readonly="readonly" /></td>
+            <td><input type="text" size="10" name="itemHamoCode[]" /></td>
+            <td><input type="text" size="13" name="desc[]" /></td>
+            <td><input type="number" size="3" step="1" name="itemQty[]" /></td>
+            <td><input type="number" size="5" name="weight[]" /></td>
+            <td><input type="number" size="3" name="cost[]" /></td>
+            <td><input type="number" size="5" name="price[]" /></td>
+            <td><input type="text" size="5" name="lineweight[]" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="lineprice[]" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="linecost[]" readonly="readonly" /></td>
             <td><a class="deleteRow"> x </a></td>
         </tr>
     </tbody>
 
-    <tfoot>
+    <tfoot >
         <tr>
-            <td colspan="5" style="text-align: center;">
-                <input type="button" id="addrow" value="Add Product" />
+            <td colspan="9" style="text-align: center;">
+                <input type="button" id="addrow" value="Add Item" />
             </td>
         </tr>
 
         <tr>
             <td colspan="5">
-                Weight Total: $<span id="grandtotal"></span>
+                Weight Total:<span id="grandtotal"></span>
             </td>
         </tr>
         <tr>
@@ -320,9 +523,9 @@ function calculateCostTotal() {
         </tr>
     </tfoot>
 </table>
-            <td colspan="5" style="btn btn-default pull-left;">
+     <!--       <td colspan="5" style="btn btn-default pull-left;">
                 <input type="button" class="btn btn-lg btn-block " id="addrow" value="Add Row" />
-            </td>
+            </td>-->
         </tr>
         <tr>
         </tr>
@@ -331,20 +534,20 @@ function calculateCostTotal() {
    <!--            <div class="row">
                 <div class="col-md-12">
                     <button id="add_row" class="btn btn-default pull-left">+ Add Row</button>
-                    {{ Form::button('+ Add Row', array('class' => 'btn btn-default pull-left','type'=>'button')) }}
+         /           {{ Form::button('+ Add Row', array('class' => 'btn btn-default pull-left','type'=>'button')) }}
                     <button id='delete_row' class="pull-right btn btn-danger">- Delete Row</button>
                 </div>
             </div>
         </div>-->
 </div>
 
-<br/><br/>
-<div class="row">
+
+<div class="row my-3">
     <div class="col-2"></div>
     <div class="col-8 text-center">{{ Form::submit('Create the Order!', array('class' => 'btn btn-primary')) }}</div>
     <div class="col-2"></div>
 </div>
-
+</div>
 {{ Form::close() }}
 
 @endsection

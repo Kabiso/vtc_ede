@@ -14,7 +14,7 @@ class CreateJobtitlesTable extends Migration
     public function up()
     {
         Schema::create('jobtitles', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title');
             $table->integer('salary');
             $table->timestamps();

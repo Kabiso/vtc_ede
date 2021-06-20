@@ -24,8 +24,7 @@ class User extends Authenticatable
         'contactNo',
         'creditLimit',
         'custGender',
-        'custAddress',
-        'credit'
+        'custAddress'
     ];
 
     /**
@@ -44,6 +43,10 @@ class User extends Authenticatable
      * @var array
      */
 
-     
+    public function Order()
+    {
+       return $this->hasMany(Order::class);      
+    }
+   
     
 }

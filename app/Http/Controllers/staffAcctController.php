@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\jobtitles;
 use App\staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
+
 
 class staffAcctController extends Controller
 {
@@ -125,8 +127,7 @@ class staffAcctController extends Controller
         $data = request()->validate([
 
             'name' => ['required', 'string', 'max:255'],
-
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['sometimes','nullable','string', 'min:8', 'confirmed'],
             'contactNo' => ['required', 'digits:8'],
             'gender' => 'required|in:M,F',
             'jobtitle' => ['required']
@@ -136,7 +137,7 @@ class staffAcctController extends Controller
 
 
         $staff->stfName = $request['name'];
-        $staff->password = Hash::make($request['password']);
+        $request['password'] == '' ? '' : $staff->password = Hash::make($request['password']);
         $staff->stfConactNo = $request['contactNo'];
         $staff->stfGender = $request['gender'];
         $staff->jobtitles_id = $job_id;
@@ -161,4 +162,69 @@ class staffAcctController extends Controller
 
         return redirect('staff/staffacct')->with('message', 'Account is Deleted!');
     }
-}
+
+/*
+    function action(Request $request)
+    {
+     if($request->ajax())
+     {
+      $output = '';
+      $query = $request->get('query');
+      if($query != '')
+      {
+       $data = DB::table('staff')
+         ->where('stfName', 'like', '%'.$query.'%')
+         ->orWhere('id', 'like', '%'.$query.'%')
+         ->orWhere('email', 'like', '%'.$query.'%')
+         
+         ->get();
+         
+      }
+      else
+      {
+       $data = DB::table('staff')
+         ->get();
+      }
+      $total_row = $data->count();
+      if($total_row > 0)
+      {
+       foreach($data as $row)
+       {
+        $url = "'/staff/staffacct/".$row->id. "/edit'"  ;
+        $output .= '
+        <tr>
+         <td>'.$row->id.'</td>
+         <td>'.$row->stfName.'</td>
+         <td>'.$row->email.'</td>
+         <td>'.$row->stfGender.'</td>
+         <td>'. jobtitles::find($row->jobtitles_id)->title .'</td>
+         <td>'.$row->stfConactNo.'</td>
+         <td>'.'<button class="btn btn-success" onclick="window.location='.$url. '"  >Edit</button>'.'</td>
+         <td>'.' <form action="/staff/staffacct/'.$row->id.'" method="POST" onsubmit="return confirm("Confirm to delete? ")">'.'@csrf
+         @method("delete")
+         <button type="submit" class="btn btn-danger">Delete</button>
+     </form>'.'</td>
+        </tr>
+        ';
+       }
+      }
+      else
+      {
+       $output = '
+       <tr>
+        <td align="center" colspan="5">No Data Found</td>
+       </tr>
+       ';
+      }
+      $data = array(
+       'table_data'  => $output,
+       'total_data'  => $total_row
+      );
+
+      echo json_encode($data);
+     }
+    }
+
+*/
+
+} 
