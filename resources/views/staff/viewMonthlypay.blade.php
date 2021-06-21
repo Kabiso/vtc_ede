@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.staffhead')
 
 @section('content')
 <div class="container">
@@ -12,18 +12,20 @@
             @endif
 
             <div class="card">
-                <div class="card-header text-white font-weight-bold cloginbar">{{ __('View Monthly Payment') }}</div>
+                <div class="card-header text-white font-weight-bold sloginbar">{{ __('View Customer Monthly Payment') }}</div>
 
                 <div class="card-body">
 
                     <table class="table">
                         <thead>
                             <tr>
-                              <th scope="col">Order Number</th>
+                              <th scope="col">Order ID</th>
                               <th scope="col">Date</th>
+                              <th scope="col">Payment status</th>
+                             
                               <th scope="col">Shipment Fee</th>
                               <th scope="col">View Order Payment</th>
-                              <th scope="col">Settle Payment</th>
+                              <th scope="col">Confirm Payment</th>
                             </tr>
                           </thead>
 
@@ -32,9 +34,15 @@
                             <tr>
                                 <td>{{$order->orderid}}</td>
                                 <td>{{$order->createddate->format('Y/m/d')}}</td>
+                                <td>{{$order->paymentstatus}}</td>
+                                
                                 <td>{{$order->shipfee}}</td>
                                 <td><button class="btn btn-info text-white" onclick="window.location='/viewOrderDetail/{{$order->orderid}}'"  >View Order</button></td>
-                                <td><button class="btn btn-success text-white" onclick="window.location='/settlepayment/{{$order->orderid}}'"  >Settle Payment</button></td>
+                                <td><form action="/staff/viewMonPay/{{$order->orderid }}" method="POST" onsubmit="return confirm('Payment Confirm ?')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">Confirm Payment</button>
+                                </form>
+                                </td>
 
                             </tr>
                             @endforeach

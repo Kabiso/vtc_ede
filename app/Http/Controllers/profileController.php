@@ -54,7 +54,7 @@ class profileController extends Controller
 
     public function show(User $user){
 
-        $orders = Order::Where('custid',$user->id)->orderBy('orderid','desc')->paginate(3);
+        $orders = Order::Where('custid',$user->id)->orderBy('orderid','desc')->paginate(5);
 
         return view('profile.view',compact('user','orders'));
     }

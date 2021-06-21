@@ -15,10 +15,18 @@
     display: none;
 }
 
+#paymentstatus
+{
+    display: none;
+}
+
+
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 
 <script>
+    
 $(document).ready(function () {
     var counter = 1;
 
@@ -194,15 +202,47 @@ $(function(){
 });
 //end payment selection
 
+
+//$(document).ready(function(){
+
+ //fetch_customer_data();
+
+ //function fetch_customer_data(query = '')
+ //{
+ /// $.ajax({
+  // url:"",
+  // method:'GET',
+  // data:{query:query},
+  // dataType:'json',
+  // headers: {
+   //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+   //     },
+   //success:function(data)
+  // {
        
+   // $('tbody').html(data.table_data);
+   // $('#total_records').text(data);
+  // }
+  //})
+// }
+
+// $(document).on('keyup', '#search', function(){
+ // var query = $(this).val();
+  //fetch_customer_data(query);
+// });
+//});
 
 
 
 
 </script>
+@if((Auth::guard('web')->check()))
 <div class="container col-md-10">
 
-
+@else
+<h1>Staff Page</h1>
+<div class="container col-md-10">
+@endif
 <h1>Create a Shipment Order</h1>
 
 {!! Form::open(['action' =>'OrderController@storewithdetails', 'method' => 'POST','files'=>true])!!}
@@ -255,7 +295,12 @@ $(function(){
 
 </div>
 
+<div class="row mt-3">
 
+    <div class="col-4 text-right">{{ Form::label('cutarea', 'Customer Country') }}</div>
+    <div class="col-4">{{ Form::text('custarea',  old('custarea'), array('class' => 'form-control')) }}</div>
+
+</div>
 
 <div class="row mt-3 mb-3">
 
@@ -331,12 +376,32 @@ $(function(){
 
 </div>
 
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('recearea', 'Receiver Country') }}</div>
+    <div class="col-4">{{ Form::text('recearea', old('recearea'), array('class' => 'form-control')) }}</div>
+
+</div>
+
 <div class="row my-3">
 
-    <div class="col-4 text-right">{{ Form::label('receaddress', 'Receiver ddress') }}</div>
+    <div class="col-4 text-right">{{ Form::label('receaddress', 'Receiver Address') }}</div>
     <div class="col-4">{{ Form::text('receaddress', old('receaddress'), array('class' => 'form-control')) }}</div>
 
 </div>
+
+<div class="row my-3">
+
+    <div class="col-4 text-right">{{ Form::label('remark', 'Remark') }}</div>
+    <div class="col-4">{{ Form::text('remark', old('remark'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+
+
+
+
+
 </div>
 
 
@@ -357,7 +422,7 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('paymemt', 'Paymemt Mothed') }}</div>
+    <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Mothed') }}</div>
     <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), 'Cash', array('class' => 'form-control')); !!}</div>
     <!--<div class="col-4">{{ Form::text('paymemt', old('payment'), array('class' => 'form-control')) }}</div> -->
 
@@ -368,7 +433,7 @@ $(function(){
 <div class="row mt-3 ">
 
     <div class="col-4 text-right"  >{{ Form::label('cardtype', 'Credit Card Type') }}</div>
-    <div class="col-4" >{!! Form::select('paymemt', array('Visa' => 'Visa', 'Master' => 'Master', 'AE' => 'AE', 'UniPay' => 'UniPay'), 'Visa', array('class' => 'form-control')); !!}</div>
+    <div class="col-4" >{!! Form::select('cardtype', array('Visa' => 'Visa', 'Master' => 'Master', 'AE' => 'AE', 'UniPay' => 'UniPay'), 'Visa', array('class' => 'form-control')); !!}</div>
 
 </div>
 <div class="row mt-3">
@@ -393,7 +458,9 @@ $(function(){
     <div class="col-4" >{{ Form::text('chequednum', old('chequednum'), array('class' => 'form-control')) }}</div>
 
 </div>
+</div>
 
+<div id="paymentstatus">
 <div class="row mt-3">
 
     <div class="col-4 text-right" >{{ Form::label('paymentstatus', 'Payment Status') }}</div>
@@ -405,7 +472,7 @@ $(function(){
 
 <div class="row my-3">
 
-    <div class="col-4 text-right">{{ Form::label('totalweight', 'totalweight') }}</div>
+    <div class="col-4 text-right">{{ Form::label('totalweight', 'Total Weight') }}</div>
     <div class="col-4" id="tweight">{{ Form::number('totalweight', old('totalweight'), array('class' => 'form-control','readonly')) }}</div>
 
 </div>
@@ -416,7 +483,36 @@ $(function(){
 <div class="card-body">
 
 
- 
+    <div class="container box">
+        <h3 >Shipment Fee calculator</h3><br />
+        <div class="panel panel-default">
+         <div class="panel-heading"></div>
+         <div class="panel-body">
+          <div class="form-group">
+           <input type="text" name="search" id="search" class="form-control" placeholder="Search Location" />
+          </div>
+          <div class="table-responsive">
+           <h3>Total Data : <span id="total_records"></span></h3>
+           <table class="table table-striped table-bordered">
+            <thead>
+             <tr>
+              <th>Shipment type </th>
+              <th>Shipment wieight</th>
+              <th>Shipment Countries</th>
+              <th>Shipment Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+     
+            </tbody>
+           </table>
+          </div>
+         </div>    
+        </div>
+       </div>
+      </body>
+     </html>
+     
            
   
 
@@ -434,18 +530,22 @@ $(function(){
 
 </div>
 
-
+<div id ='shipfee'>
 <div class="row mt-3">
-
     <div class="col-4 text-right">{{ Form::label('shipfee', 'Shipment Fee') }}</div>
+   
+  @if((Auth::guard('web')->check()))
+    <div class="col-4">{{ Form::text('shipfee',old('shipfee'), array('class' => 'form-control','readonly')) }}</div>
+    @else
     <div class="col-4" >{{ Form::number('shipfee', old('shipfee'), array('class' => 'form-control')) }}</div>
+    @endif
 
+ </div>
 </div>
 
-
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('totalqty', 'totalqty') }}</div>
+    <div class="col-4 text-right">{{ Form::label('totalqty', 'Total Qty') }}</div>
     <div class="col-4" id="tqty">{{ Form::number('totalqty', old('totalqty'), array('class' => 'form-control','readonly')) }}</div>
 
 </div>

@@ -40,7 +40,7 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->custGender}}</td>
                                 <td>{{$user->contactNo}}</td>
-                                <td  id="credit">{{1000 - App\Order::WHERE('custid',$user->id)->sum('shipfee')}}</td>
+                                <td  class="credit"> {{ $user->creditLimit - App\Order::WHERE('custid', $user->id)->where('paymentstatus', 'Waiting to Pay') ->sum('shipfee')}}</td>
                                 <td>{{$user->creditLimit}}</td>
                                 <td><button class="btn btn-info text-white" onclick="window.location='/staff/profile/{{ $user->id }}'"  >View</button></td>
                                 <td><button class="btn btn-success" onclick="window.location='/staff/profile/{{ $user->id }}/edit'"  >Edit</button></td>
@@ -66,14 +66,14 @@
 <script>
 
     $(document).ready(function () {
+        
+       var credit =  $('.credit').html();
 
-       var credit =  $('#credit').html();
-        console.log(credit);
        if(credit < 0 )
        {
-           $('#credit').css("color","red");
-       }
-
+           $('.credit').css("color","red");
+          
+       }    
     });
 </script>
 

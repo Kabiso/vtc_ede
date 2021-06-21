@@ -46,47 +46,36 @@
                             <a class="nav-link text-white" href="{{ URL::to('staff/') }}">Home<span class="sr-only">(current)</span></a>
                           </li>
                           
-                          @can('sysAdmin','normalStaff')
-                          <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customer Account</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item " href="{{ URL::to('orders/create') }}">Create Customer Account</a>
-                              <a class="dropdown-item " href="{{ URL::to('orders/create') }}">View Customer Account</a>
-                            </div>
-                          </li>
-                          @endcan
                           
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Orders</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ URL::to('#') }}">View All Orders</a>
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">View All Order Details</a>
+                              
 
                             @can('sysAdmin','normalStaff')
-                              <a class="dropdown-item " href="{{ URL::to('#') }}">Create New Order Detail</a>
+                              <a class="dropdown-item " href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
                               <!-- Dropdown menu item for create new order with details -->
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">Create New Order with Details</a>
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">Create New Order with Details</a>
                             @endcan
 
                             </div>
                           </li>
 
-                          @can('Acct','normalStaff')
+                          @can('sysAdmin','Acct')
                           <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Receipt</a>
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Payment</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="nav-link" href="{{ URL::to('#') }}">View All Receipt</a>
+                                <a class="dropdown-item" href="{{ URL::to('/staff/viewMonPay') }}">View All Monthly Payment</a>
                             </div>
                           </li>
                           @endcan
 
-                          @can('Acct','manager')
+                          @can('sysAdmin','Acct','manager')
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="nav-link" href="{{ URL::to('#') }}">View Analyze Report</a>
-                                <a class="nav-link" href="{{ URL::to('#') }}">View Financial Report</a>
+                                <a class="dropdown-item" href="{{ URL::to('#') }}">View Analyze Report</a>
+                                <a class="dropdown-item" href="{{ URL::to('#') }}">View Financial Report</a>
                             </div>
                           </li>
                           @endcan

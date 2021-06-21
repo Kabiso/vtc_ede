@@ -22,7 +22,7 @@ class staffAcctController extends Controller
     {
         if (Gate::allows('sysAdmin'))
         {
-            $staffs = staff::paginate(20);
+            $staffs = staff::paginate(15);
             return view('staff.viewAcct')->with('staffs',$staffs);
         }else{
             return redirect('staff/')->with('alert','You are not allow to perfom such action!');

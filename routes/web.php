@@ -7,7 +7,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\staffAcctController;
 use App\Http\Controllers\monthlypayController;
-
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ use App\Http\Controllers\monthlypayController;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home','OrderController@viewOrderCust')->name('home');
 
 //customer change password
 Route::get('change-password', 'ChangePWController@index');
@@ -34,6 +34,15 @@ Route::group(['middleware' => 'auth:web'], function () {
 //customer account management
 Route::get('/profile/{user}/edit', 'profileController@edit')->name('profile.edit');
 Route::patch('/profile/{user}', 'profileController@update')->name('profile.update');
+
+// View all order
+Route::get('orders/viewAll','OrderController@viewOrderCust')->name('orders.custView');
+
+//Monthly payment
+Route::get('settlepayment/{order}', 'monthlypayController@settlepay')->name('settlepay.view');
+Route::post('settlepayment/{order}/success','monthlypayController@success')->name('settlepay.success');
+Route::get('monthlypay','monthlypayController@view')->name('monthlypay.view');
+
 
 });
 
@@ -55,9 +64,11 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
      Route::resource('commercialinvoice', 'CommercialinvoiceController');
 
     //View Monthly Payment
-   Route::get('monthlypay','monthlypayController@view')->name('monthlypay.view');
+   
 
    Route::get('viewOrderDetail/{order}','orderController@viewOrderDetail')->name('order.viewDetail');
+
+  
 
 });
 
@@ -87,6 +98,8 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::view('staff/dashboard', 'staff.dashboard');
 
 
+
+
     //staff Account
     Route::get('staff/staffacct', 'staffAcctController@index')->name('staffacct.index');
     Route::get('staff/staffacct/create', 'staffAcctController@create')->name('staffacct.create');
@@ -107,5 +120,7 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::patch('staff/profile/{user}', 'profileController@updateCustomer')->name('profile.custStaffupdate');
     Route::delete('staff/profile/{user}', 'profileController@destroy')->name('profile.custStaffdelete');
     
+    Route::get('staff/viewMonPay','monthlypayController@staffView')->name('staff.monthlyView');
+    Route::post('staff/viewMonPay/{order}','monthlypayController@paymentconfirm')->name('staff.monthlyConfirm');
 
 });

@@ -554,14 +554,4 @@ class OrderController extends Controller
         // Load the view and pass the retrieved order to the view for further processing
         return View::make('orders.show')->with('order', $order);
     }
-
-    
-    public function viewOrderCust()
-    {
-        $orders = Order::Where('custid',Auth::user()->id)->orderBy('orderid','desc')->paginate(15);
-
-        return view::make('orders.customerView',compact('orders'));
-    }
-
-    
 }

@@ -43,7 +43,7 @@
                     <div class="row">
                         <label class="col-md-4">Credit</label>
                         
-                        <span class="inline-block col-md-8"  id="credit">{{ 1000 - App\Order::WHERE('custid',$user->id)->sum('totalamount')}}</span>
+                        <span class="inline-block col-md-8"  id="credit">{{ $user->creditLimit - App\Order::WHERE('custid', $user->id)->where('paymentstatus', 'Waiting to Pay') ->sum('shipfee')}}</span>
                     </div>
 
                     <div class="row">

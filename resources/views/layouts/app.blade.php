@@ -26,14 +26,19 @@
     <script>
 
         $(document).ready(function () {
-    
-           var credit =  $('#credit').html();
-            console.log(credit);
+            var limit = {{ Auth::user()->creditLimit}}; 
+            
+        
+            var payment = {{ App\Order::WHERE('custid', Auth::user()->id)->where('paymentstatus', 'Waiting to Pay') ->sum('shipfee')}} ;
+           var credit =  limit -  payment;
+
+            //console.log(payment);
            if(credit < 0 )
            {
                $('#credit').css("color","red");
+              
            }
-    
+                $('#credit').html(credit);
         });
     </script>
     
@@ -55,32 +60,19 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
 
-                        <li class="nav-item active ">
-                            <a class="nav-link text-white" href="{{ URL::to('orders/') }}">Home<span class="sr-only">(current)</span></a>
-                          </li>
+                       
                           <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ URL::to('orders/') }}">View All Orders</a>
+                            <a class="nav-link text-white" href="{{ URL::to('orders/viewAll') }}">View All Orders</a>
+                          </li>
+
+                          <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
                           </li>
 
                           <li class="nav-item">
                             <a class="nav-link text-white" href="{{ URL::to('monthlypay/') }}">Monthly Payment Orders</a>
                           </li>
 
-                          <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manipulate Orders</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item " href="{{ URL::to('orders/create') }}">Create New Order</a>
-                            </div>
-                          </li>
-                          
-                          <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manipulate Order Detail</a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item " href="{{ URL::to('orderdetails/create') }}">Create New Order Detail</a>
-                              <!-- Dropdown menu item for create new order with details -->
-                                <a class="dropdown-item" href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order with Details</a>
-                            </div>
-                          </li>
 
                     </ul>
 
@@ -97,7 +89,7 @@
                             <li class="nav-item mr-5">
                                 <span class="nav-link text-white">
                                     <span>Credit :</span>
-                                    <span id="credit">{{ 1000 - App\Order::WHERE('custid',Auth::user()->id)->sum('shipfee')}}</span>
+                                    <span id="credit"></span>
                                     <span>/ {{Auth::user()->creditLimit}}</span>
                                 </span>
                             </li>
