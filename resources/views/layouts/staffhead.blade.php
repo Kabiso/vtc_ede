@@ -31,7 +31,7 @@
             <div class="container">
 
                 
-                <a class="navbar-brand text-white   " href="{{ url('/') }}">
+                <a class="navbar-brand text-white   " href="{{ url('staff/') }}">
                     EDE
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -50,18 +50,18 @@
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Orders</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">View All Orders</a>
-                              
+                                <a class="dropdown-item" href="{{ URL::to('/staff/orderindex') }}">View All Orders</a>
+                                <a class="dropdown-item" href="{{ URL::to('/staff/viewbooking') }}">View All Pick Up Booing</a>
 
-                            @can('sysAdmin','normalStaff')
+                            @canany(['sysAdmin' , 'normalStaff'])
                               <a class="dropdown-item " href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
-                              <!-- Dropdown menu item for create new order with details -->
-                            @endcan
+                                
+                            @endcanany
 
                             </div>
                           </li>
 
-                          @can('sysAdmin','Acct')
+                          @can('acct')
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Payment</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -70,7 +70,8 @@
                           </li>
                           @endcan
 
-                          @can('sysAdmin','Acct','manager')
+                          <!------
+                          @canany(['sysAdmin' , 'acct' ,'manager'])
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -78,7 +79,7 @@
                                 <a class="dropdown-item" href="{{ URL::to('#') }}">View Financial Report</a>
                             </div>
                           </li>
-                          @endcan
+                          @endcan----->
 
                           @can('sysAdmin')
                           <li class="nav-item dropdown">
@@ -91,7 +92,7 @@
                           </li>
                           @endcan
 
-                          @can('sysAdmin', 'normalStaff')
+                          @can('normalStaff')
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customer Account</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -145,6 +146,25 @@
         </nav>
 
         <main class="py-4">
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+                </div>
+            @endif
+
+            
             @yield('content')
         </main>
     </div>

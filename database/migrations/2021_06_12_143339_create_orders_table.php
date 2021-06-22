@@ -88,7 +88,7 @@ class CreateOrdersTable extends Migration
             $table->dateTime('finalizeddate', 0)->nullable();
             
             // Create a integer column for order status
-            $table->integer('orderstatus')->default(0);
+            $table->string('orderstatus', 255)->default('Ready for delivery');
 
             $table->foreign('custid')->references('id')->on('customer');
             

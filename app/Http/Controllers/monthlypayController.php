@@ -40,7 +40,7 @@ class monthlypayController extends Controller
 
     public function staffview()
     {
-        $this->authorize('sysAdmin','acct');
+        $this->authorize('acct');
         $order = Order::Where('paymentstatus','Waiting to Pay')->orderBy('orderid','desc')->paginate(15);   
         
         return view('staff.viewMonthlypay')->with('orders',$order);

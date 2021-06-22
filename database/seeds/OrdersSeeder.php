@@ -43,7 +43,7 @@ class OrdersSeeder extends Seeder
                 'shiptype' => Str::random(20),
                 'shipfee' => rand(1000, 4000),
                 'shipcountries' => Str::random(10),
-                'orderstatus' => 0,
+                'orderstatus' => 'Ready for delivery',
  
     ]);
 }

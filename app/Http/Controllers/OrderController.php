@@ -311,10 +311,7 @@ class OrderController extends Controller
             $order->createddate = Carbon::now();
 
             $order->save();
-            $booking = new Booking;
-            $booking->location = $request->location;
-            $booking->bookingtime = $request->bookingtime;
-            $order->booking()->save($booking);
+          
 
             // Insert order item detail based on the inserted order
             $itemHamoCodes = $request->input('itemHamoCode', []);
@@ -347,7 +344,7 @@ class OrderController extends Controller
 
 
             // Redirect
-            return back()->with('success','Successfully updated order detail!');
+            return redirect('/staff/orderindex')->with('success','Successfully updated order detail!');
         }
     }
 }
@@ -457,7 +454,7 @@ class OrderController extends Controller
         $validator = Validator::make($input, $rules, $messages);
         // Perform insert order action when validation pass or return to the index page if validation fails
         if ($validator->fails()) {
-            return Redirect::to('orders/createorderwithdetails')->withErrors($validator);
+            return Redirect::to('orders/createorderwithdetails')->withErrors($validator)->withInput();
         } else {
             // Create a Order instance and configure the values before insert action
             $order = new Order;
@@ -493,11 +490,13 @@ class OrderController extends Controller
             $order->createddate = Carbon::now();
 
             $order->save();
+
+            if($request->location ?? $request->bookingtime !== null){
             $booking = new Booking;
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
-
+            }
 
             
 

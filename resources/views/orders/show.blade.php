@@ -36,11 +36,12 @@
        </div>
 
 
-   <div class="card ">
-      <div class="card-header text-white cloginbar">Pick up Booking</div>
+   
+      
 
    @foreach ($order->booking as $bk)
-  
+   <div class="card ">
+   <div class="card-header text-white cloginbar">Pick up Booking</div>
       <div class="row mt-3">
          <div class="col-4 text-right">Pickup Location:</div>
          <div class="col-4">{{  $bk->location   }}</div>

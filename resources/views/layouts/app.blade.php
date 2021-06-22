@@ -36,7 +36,11 @@
            if(credit < 0 )
            {
                $('#credit').css("color","red");
-              
+               $('#cpayment').hide();
+               $('#cpayment1').show();
+           }else{
+            $('#cpayment1').hide();
+           $('#cpayment').show();
            }
                 $('#credit').html(credit);
         });

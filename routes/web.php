@@ -8,6 +8,7 @@ use App\Http\Controllers\profileController;
 use App\Http\Controllers\staffAcctController;
 use App\Http\Controllers\monthlypayController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\staffOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ use App\Http\Controllers\OrderController;
 //  for customer 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', 'OrderController@viewOrderCust')->name('home')->middleware('auth');
 Route::get('/home','OrderController@viewOrderCust')->name('home');
 
 //customer change password
@@ -92,12 +93,8 @@ Route::post('staff/logout', [staffController::class, 'logout'])
 Route::group(['middleware' => 'auth:staff'], function () 
 {
 
-    Route::get('staff/', [staffController::class, 'index'])
+    Route::get('staff/', [staffOrderController::class, 'view'])
         ->name('staff.home');
-
-    Route::view('staff/dashboard', 'staff.dashboard');
-
-
 
 
     //staff Account
@@ -123,4 +120,14 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/viewMonPay','monthlypayController@staffView')->name('staff.monthlyView');
     Route::post('staff/viewMonPay/{order}','monthlypayController@paymentconfirm')->name('staff.monthlyConfirm');
 
+    Route::get('staff/orderindex','staffOrderController@view')->name('staff.orderindex');
+    Route::get('staff/orderedit/{order}', 'staffOrderController@edit')->name('staff. orderedit');
+    Route::post('staff/updateorder/{order}', 'staffOrderController@updateorder')->name('staff. orderorder');
+    Route::post('staff/changestatus/{order}', 'staffOrderController@changestatus')->name('orders. changestatus ');
+
+
+    Route::get('staff/viewbooking','staffOrderController@viewbooking')->name('staff.viewbooking');
+    Route::get('staff/editbooking/{booking}','staffOrderController@editbooking')->name('staff.editbooking');
+    Route::post('staff/updatebooking/{booking}','staffOrderController@updatebooking')->name('staff.updatebooking');
+   
 });

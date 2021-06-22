@@ -34,15 +34,15 @@ class AuthServiceProvider extends ServiceProvider
        });
        
         Gate::define('manager', function($staff) {
-            return $staff->jobtitles_id == '2';
+            return $staff->jobtitles_id == '1' || '2';
         });
 
         Gate::define('acct', function($staff) {
-            return $staff->jobtitles_id == '4';
+            return $staff->jobtitles_id == '1' || '4';
         });
 
         Gate::define('normalStaff', function($staff) {
-            return $staff->jobtitles_id == '2' ?? '3' ?? '5' ?? '6' ?? '8' ;
+            return $staff->jobtitles_id == '1' || '2' || '3' || '5' || '6' || '8' ;
         });
 
         

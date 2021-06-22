@@ -14,10 +14,10 @@ class staffac extends Seeder
     public function run()
     {
         DB::table('staff')->insert([
-            'stfName' => 'Staff',
-            'email' => 'staff@gmail.com',
+            'stfName' => 'System Admin',
+            'email' => 'sys_admin@ede.com',
             'password' => Hash::make('123456789'),
-            'stfConactNo' => rand(12345678, 999999999),
+            'stfConactNo' => '23232323',
             'stfGender' => 'M',
             'jobtitles_id' =>'1',
 
