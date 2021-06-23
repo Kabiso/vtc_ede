@@ -30,7 +30,8 @@ class staffOrderController extends Controller
     }
 
     public function edit(Order $order)
-    {
+    {   
+        
         return View::make('staff.editorder')->with('order',$order);
     }
 
@@ -224,7 +225,7 @@ class staffOrderController extends Controller
             $lineweights = $request->input('lineweight', []);
 
             for ($item = 0; $item < count($itemHamoCodes); $item++) {
-                $orderdetail = new OrderDetail;
+               $orderdetail = $order->orderdetails->first();
                 if ($itemHamoCodes[$item] != '') {
                     $orderdetail->itemHamoCode = $itemHamoCodes[$item];
                     $orderdetail->desc = $descs[$item];

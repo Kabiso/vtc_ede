@@ -566,15 +566,15 @@ $(function(){
 
     <tbody>
         <tr>
-            <td><input type="text" size="10" name="itemHamoCode[]" /></td>
-            <td><input type="text" size="13" name="desc[]" /></td>
-            <td><input type="number" size="3" step="1" name="itemQty[]" /></td>
-            <td><input type="number" size="5" name="weight[]" /></td>
-            <td><input type="number" size="3" name="cost[]" /></td>
-            <td><input type="number" size="5" name="price[]" /></td>
-            <td><input type="text" size="5" name="lineweight[]" readonly="readonly" /></td>
-            <td><input type="text" size="5" name="lineprice[]" readonly="readonly" /></td>
-            <td><input type="text" size="5" name="linecost[]" readonly="readonly" /></td>
+            <td><input type="text" size="10" name="itemHamoCode[]" value="{{$order->orderdetails->first()->itemHamoCode}}"  /></td>
+            <td><input type="text" size="13" name="desc[]" value="{{$order->orderdetails->first()->desc}}" /></td>
+            <td><input type="number" size="3" step="1" name="itemQty[]" value="{{$order->orderdetails->first()->itemQty}}" /></td>
+            <td><input type="number" size="5" name="weight[]"  value="{{$order->orderdetails->first()->weight}}" /></td>
+            <td><input type="number" size="3" name="cost[]"  value="{{$order->orderdetails->first()->cost}}"/></td>
+            <td><input type="number" size="5" name="price[]" value="{{$order->orderdetails->first()->price}}"/></td>
+            <td><input type="text" size="5" name="lineweight[] "  value="{{$order->orderdetails->first()->lineweight}}" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="lineprice[]" value="{{$order->orderdetails->first()->lineprice}}" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="linecost[]" value="{{$order->orderdetails->first()->linecost}}" readonly="readonly" /></td>
             <td><a class="deleteRow"> x </a></td>
         </tr>
     </tbody>
