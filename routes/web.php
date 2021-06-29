@@ -122,8 +122,9 @@ Route::group(['middleware' => 'auth:staff'], function ()
 
     Route::get('staff/orderindex','staffOrderController@view')->name('staff.orderindex');
     Route::get('staff/orderedit/{order}', 'staffOrderController@edit')->name('staff. orderedit');
-    Route::post('staff/updateorder/{order}', 'staffOrderController@updateorder')->name('staff. orderorder');
-    Route::post('staff/changestatus/{order}', 'staffOrderController@changestatus')->name('orders. changestatus ');
+    Route::post('staff/updateorder/{order}', 'staffOrderController@updateorder')->name('staff.orderorder');
+    Route::post('staff/changestatus/{order}', 'staffOrderController@changestatus')->name('orders.changestatus ');
+    Route::get('staff/ordersearch','staffOrderController@search')->name('staff.search');
 
 
     Route::get('staff/viewbooking','staffOrderController@viewbooking')->name('staff.viewbooking');

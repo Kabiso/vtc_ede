@@ -74,8 +74,8 @@ class OrderDetailController extends Controller
         
         // Perform insert order action when validation pass or return to the index page if validation fails
         if ($validator->fails()) {
-            return Redirect::to('orderdetails/create')->withErrors($validator)
-        } else {
+            return Redirect::to('orderdetails/create')->withErrors($validator);
+        }else {
             // Create a Order instance and configure the values before insert action
             $orderdetail = new OrderDetail;
             $orderdetail->desc = $request->desc;

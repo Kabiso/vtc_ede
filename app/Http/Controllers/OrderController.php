@@ -216,6 +216,7 @@ class OrderController extends Controller
           //Receiver
            'receCompanyname' =>  ['required', 'max:255'],
            'recename' => ['required', 'string', 'max:255'],
+           'receEmail' => ['required', 'string', 'max:255'],
            'recephone' =>  ['required', 'max:255'],
            'recepostcode' => ['required', 'max:4'],
            'receaddress' => ['required', 'max:255'],
@@ -253,6 +254,7 @@ class OrderController extends Controller
                //Receiver
               'receCompanyname.required' => 'Please input the Receiver Company Name',
                 'recename.required' => 'Please input the Receiver Name',
+                'receEmail.required' => 'Please input the Receiver Email',
                 'recephone.required' => 'Please input the Receiver Phone',
                 'recepostcode.required' => 'Please input the Receiver Post Code',
                 'receaddress.required' => 'Please input the Receiver Address',
@@ -286,6 +288,7 @@ class OrderController extends Controller
             $order->recearea = $request->recearea;
             $order->receCompanyname = $request->receCompanyname;
             $order->recename = $request->recename;
+            $order->receEmail = $request->receEmail;
             $order->recephone = $request->recephone;
             $order->recepostcode = $request->recepostcode;
             $order->receaddress = $request->receaddress;
@@ -393,6 +396,7 @@ class OrderController extends Controller
           //Receiver
            'receCompanyname' =>  ['required', 'max:255'],
            'recename' => ['required', 'string', 'max:255'],
+           'receEmail' => ['required', 'string', 'max:255'],
            'recephone' =>  ['required', 'max:255'],
            'recepostcode' => ['required', 'max:4'],
            'receaddress' => ['required', 'max:255'],
@@ -430,6 +434,7 @@ class OrderController extends Controller
                //Receiver
               'receCompanyname.required' => 'Please input the Receiver Company Name',
                 'recename.required' => 'Please input the Receiver Name',
+                'receEmail.required' => 'Please input the Receiver Email',
                 'recephone.required' => 'Please input the Receiver Phone',
                 'recepostcode.required' => 'Please input the Receiver Post Code',
                 'receaddress.required' => 'Please input the Receiver Address',
@@ -464,6 +469,7 @@ class OrderController extends Controller
             $order->recearea = $request->recearea;
             $order->receCompanyname = $request->receCompanyname;
             $order->recename = $request->recename;
+            $order->receEmail = $request->recenEmail;
             $order->recephone = $request->recephone;
             $order->recepostcode = $request->recepostcode;
             $order->receaddress = $request->receaddress;

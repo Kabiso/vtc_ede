@@ -12,7 +12,7 @@
             @endif
             
             <div class="card">
-                <div class="card-header text-white font-weight-bold sloginbar">Orders </div>
+                <div class="card-header text-white font-weight-bold sloginbar">Orders</div>
                 <div class="card-body ">
                     <table class="table">
                         <thead>

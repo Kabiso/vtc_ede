@@ -46,6 +46,8 @@ class CreateOrdersTable extends Migration
 
             $table->string('recename', 255);
 
+            $table->string('receEmail', 255);
+
             // Create a integer column for customer phone
             $table->string('recephone',15);
 

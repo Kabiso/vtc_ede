@@ -65,13 +65,38 @@ class staffOrderController extends Controller
             'name' =>$order->custname
             ];
 
-//寄出信件
+//send email
         Mail::send('emails.post', $data, function($message)use ($to) {
     
          $message->to($to['email'], $to['name'])->subject('Order Complete');
         });
 
         }
+
+//Delivered
+        if( $request['status'] == 'Delivered')
+        {
+            $data = 
+            [
+            'orderid'=>$order->orderid,
+            'recename'=>$order->recename
+            ];
+
+            $to =[ 
+                
+             'email' =>  Order::find($order->orderid)->receEmail,
+            'name' =>$order->recename
+            ];
+
+//send email
+        Mail::send('emails.delivered', $data, function($message)use ($to) {
+    
+         $message->to($to['email'], $to['name'])->subject('Order Delivered');
+        });
+
+        }
+
+        
 
 
 
@@ -245,5 +270,25 @@ class staffOrderController extends Controller
       
         return redirect('/staff/orderindex')->with('message', 'Order is Updated!');  
     }
+
+    public function search(Request $request)
+    {
+        if($request->ajax())
+        {
+           
+           $detail= User::where('id',$request->search)->first();
+            
+            $data=array(
+                'cname' => $detail->custname,
+                'cphone' => $detail->contactNo,
+                'caddress' => $detail->custAddress
+
+            );
+            
+            return Response($data);
+           
+        }
+    }
+
 }
 

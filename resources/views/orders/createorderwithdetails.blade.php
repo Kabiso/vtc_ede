@@ -87,9 +87,36 @@ $(document).ready(function () {
         calculateCostTotal();
     });
 
+
     
 
+    $("#custid").on('change',function(){
 
+        
+    $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    });
+
+    var value=$(this).val();
+    
+    $.ajax({
+    type : 'get',
+    url : '{{URL::to('staff/ordersearch')}}',
+    data:{search: value,
+
+    },
+    success:function(arr){
+
+        $("#custname").val(arr.cname);
+        $("#custphone").val(arr.cphone);
+        $("#custaddress").val(arr.caddress);
+        
+    }
+    });
+
+});
 
 
 
@@ -320,16 +347,11 @@ $(function(){
 
 
 
-
-
-
-
-
-
-
-
-
 </script>
+
+
+
+
 @if((Auth::guard('web')->check()))
 <div class="container col-md-10">
 
@@ -350,7 +372,7 @@ $(function(){
     @if((Auth::guard('web')->check()))
     <div class="col-4">{{ Form::text('custid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div>
     @else
-    <div class="col-4">{{ Form::text('custid',old('custid'),array('class' => 'form-control')) }}</div>
+    <div class="col-4" id="cid">{{ Form::text('custid',old('custid'),array('class' => 'form-control')) }}</div>
     @endif
 </div>
 
@@ -368,7 +390,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('custname', 'Customer Name') }}</div>
-    <div class="col-4">{{ Form::text('custname', Auth::user()->custname, array('class' => 'form-control')) }}</div>
+    <div class="col-4" >{{ Form::text('custname', Auth::user()->custname, array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -378,7 +400,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('custphone', 'Customer Phone Number') }}</div>
-    <div class="col-4">{{ Form::text('custphone',  Auth::user()->contactNo, array('class' => 'form-control')) }}</div>
+    <div class="col-4" >{{ Form::text('custphone',  Auth::user()->contactNo, array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -399,7 +421,7 @@ $(function(){
 <div class="row mt-3 mb-3">
 
     <div class="col-4 text-right">{{ Form::label('custaddress', 'Customer Address') }}</div>
-    <div class="col-4">{{ Form::text('custaddress', Auth::user()->custAddress, array('class' => 'form-control')) }}</div>
+    <div class="col-4" >{{ Form::text('custaddress', Auth::user()->custAddress, array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -453,6 +475,13 @@ $(function(){
 
     <div class="col-4 text-right">{{ Form::label('recename', 'Receiver Name') }}</div>
     <div class="col-4">{{ Form::text('recename', old('recename'), array('class' => 'form-control')) }}</div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-4 text-right">{{ Form::label('receEmail', 'Receiver Email') }}</div>
+    <div class="col-4">{{ Form::text('receEmail', old('receEmail'), array('class' => 'form-control')) }}</div>
 
 </div>
 
