@@ -23,6 +23,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+  
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+
     
 </head>
 <body>
@@ -52,6 +57,7 @@
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ URL::to('/staff/orderindex') }}">View All Orders</a>
                                 <a class="dropdown-item" href="{{ URL::to('/staff/viewbooking') }}">View All Pick Up Booing</a>
+                                
 
                             @canany(['sysAdmin' , 'normalStaff'])
                               <a class="dropdown-item " href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
@@ -59,6 +65,10 @@
                             @endcanany
 
                             </div>
+                          </li>
+
+                          <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ URL::to('/live_search') }}">Track Shipment</a>
                           </li>
 
                           @can('acct')
@@ -144,7 +154,7 @@
                 </div>
             </div>
         </nav>
-
+       
         <main class="py-4">
 
             @if (count($errors) > 0)
@@ -167,6 +177,7 @@
             
             @yield('content')
         </main>
+        
     </div>
 </body>
 </html>

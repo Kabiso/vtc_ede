@@ -90,9 +90,42 @@ $(document).ready(function () {
 
     
 
-    $("#custid").on('change',function(){
-
+// Calculate the  ship fee
+    $("#shipcountries, #totalweight").change(function(){
         
+    $.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+    });
+    
+    var weight = $("#totalweight").val();
+    var shipcou = $("#shipcountries").val();
+    
+    weight <= 3 ? $("#shiptype").val('Global Service') : $("#shiptype").val('EDE EXPRESS FREIGHT Service');
+    
+    
+
+  
+    $.ajax({
+    type : 'get',
+    url : '{{URL::to('orderdetails/calfee')}}',
+    data:{
+        weight: weight, 
+        shipcou: shipcou,
+
+    },
+    success:function(arr){
+        console.log(arr);
+        $("#shipfee").val(arr.shipfee);
+    }
+    });
+    
+});
+
+    //AUTO FILL IN CUSETOMER DATA FOR STAFF SIDE
+
+    $("#custid").on('change',function(){
     $.ajaxSetup({
     headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -115,12 +148,10 @@ $(document).ready(function () {
         
     }
     });
-
 });
 
 
-
-
+    
 
 });
 
@@ -146,6 +177,7 @@ function calculateGrandTotal() {
     });
     $("#grandtotal").text(grandTotal.toFixed(2));
     $("#tweight .form-control").val(grandTotal.toFixed(2));
+    $("#totalweight").trigger('change');
     
 }
 
@@ -414,7 +446,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('cutarea', 'Customer Country') }}</div>
-    <div class="col-4">{{ Form::text('custarea',  old('custarea'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::select('custarea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -502,7 +534,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recearea', 'Receiver Country') }}</div>
-    <div class="col-4">{{ Form::text('recearea', old('recearea'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::select('recearea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -609,45 +641,11 @@ $(function(){
 <div class="card">
 <div class="card-header text-white cloginbar">Shipment Information</div>
 <div class="card-body">
-
-
-    <div class="container box">
-        <h3 >Shipment Fee calculator</h3><br />
-        <div class="panel panel-default">
-         <div class="panel-heading"></div>
-         <div class="panel-body">
-          <div class="form-group">
-           <input type="text" name="search" id="search" class="form-control" placeholder="Search Location" />
-          </div>
-          <div class="table-responsive">
-           <h3>Total Data : <span id="total_records"></span></h3>
-           <table class="table table-striped table-bordered">
-            <thead>
-             <tr>
-              <th>Shipment type </th>
-              <th>Shipment wieight</th>
-              <th>Shipment Countries</th>
-              <th>Shipment Fee</th>
-              </tr>
-            </thead>
-            <tbody>
-      
-            </tbody>
-           </table>
-          </div>
-         </div>    
-        </div>
-       </div>
-      </body>
-     </html>
-     
-           
   
-
 <div class="row">
 
     <div class="col-4 text-right">{{ Form::label('shiptype', 'Shipment Type') }}</div>
-    <div class="col-4">{!! Form::select('shiptype', array('Global Service' => 'DOCUMENT ENVELOPE GLOBAL Service', 'EDE EXPRESS FREIGHT Service' => 'EDE EXPRESS FREIGHT Service'), 'DOCUMENT ENVELOPE Global Service', array('class' => 'form-control')); !!}</div>
+    <div class="col-4">{!! Form::select('shiptype', array('Global Service' => 'DOCUMENT ENVELOPE GLOBAL Service', 'EDE EXPRESS FREIGHT Service' => 'EDE EXPRESS FREIGHT Service'), 'DOCUMENT ENVELOPE Global Service', array('class' => 'form-control') ); !!}</div>
 
 </div>
 
@@ -658,7 +656,7 @@ $(function(){
 
 </div>
 
-<div id ='shipfee'>
+<div >
 <div class="row mt-3">
     <div class="col-4 text-right">{{ Form::label('shipfee', 'Shipment Fee') }}</div>
    

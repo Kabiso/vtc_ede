@@ -17,6 +17,7 @@ use App\OrderDetail;
 use App\Booking;
 use App\User;
 
+
 class OrderController extends Controller
 {
     /**
@@ -469,7 +470,7 @@ class OrderController extends Controller
             $order->recearea = $request->recearea;
             $order->receCompanyname = $request->receCompanyname;
             $order->recename = $request->recename;
-            $order->receEmail = $request->recenEmail;
+            $order->receEmail = $request->receEmail;
             $order->recephone = $request->recephone;
             $order->recepostcode = $request->recepostcode;
             $order->receaddress = $request->receaddress;
@@ -567,6 +568,200 @@ class OrderController extends Controller
 
         return view::make('orders.customerView',compact('orders'));
     }
+
+
+    public function updateorderb(Request $request,$id)
+    {
+        //
+        $input = $request->all();
+
+        // Create validation rules, please refer to https://laravel.com/docs/7.x/validation#available-validationrules for more details
+        $rules = array(
+      
+           //customer   
+           'custid' => 'required',
+           'custname' => ['required', 'string', 'max:255'],
+           'custpostcode' => ['required', 'max:4'],
+           'custaddress' => ['required', 'max:255'],
+          
+          //Receiver
+           'receCompanyname' =>  ['required', 'max:255'],
+           'recename' => ['required', 'string', 'max:255'],
+           'recephone' =>  ['required', 'max:255'],
+           'recepostcode' => ['required', 'max:4'],
+           'receaddress' => ['required', 'max:255'],
+           
+           //payment
+            'paymemt' => 'required',
+            'totalweight' => 'required|numeric',
+            'totalcost' => 'required|numeric',
+           'totalamount' => 'required|numeric',
+  
+          //shipment 
+           'shiptype' => 'required',
+           'shipcountries' => 'required',
+           'paymentstatus' => 'required',
+       
+  
+  
+           //shipment details
+         
+   //           'descs' => 'required',
+   //           '$itemQtys'=>'required',
+   //           'costs'      =>'required',
+  //            'prices'     =>'required',
+   //           'weights'     =>'required',
+         
+          );
+  
+          $messages = [
+              //customer   
+              'custid.required' => 'Please input the Customer ID',
+              'custname.required' => 'Please input the Customer Name',
+              'custpostcode.required'  => 'Please input the Customer Post Code',
+              'custaddress.required' => 'Please input the Customer Address',
+              
+                  
+               //Receiver
+              'receCompanyname.required' => 'Please input the Receiver Company Name',
+                'recename.required' => 'Please input the Receiver Name',
+                'recephone.required' => 'Please input the Receiver Phone',
+                'recepostcode.required' => 'Please input the Receiver Post Code',
+                'receaddress.required' => 'Please input the Receiver Address',
+  
+             //shipment 
+                'paymemt.required' =>  'Please select the Paymemt Method',
+                'totalweight.numeric' =>  'Please input Total Weight',
+                'totalcost.numeric' =>  'Please input the Total Cost',
+  
+  
+                 //shipment details
+            
+            //  'descs.required'  =>  'Please input the full description',
+          //    '$itemQtys.required' =>'Please input the No of Qty',
+         //     'costs.required'      =>'Please input the Unit cost',
+       //       'prices.required'     =>'Please input the Unit price',
+      //        'weights.required'    =>'Please input the Unit weigth',
+           
+          ];
+        
+
+        $validator = Validator::make($input, $rules, $messages);
+        // Perform insert order action when validation pass or return to the index page if validation fails
+        if ($validator->fails()) {
+            return Redirect::to('orders/createorderwithdetails')->withErrors($validator)->withInput();
+        } else {
+          
+
+            // Create a Order instance and configure the values before insert action
+            for($i = 0 ; $i <=  $request->input("copy");$i++){
+     
+            $order = new Order;
+            $order->custid = $request->custid;
+            $order->custarea = $request->custarea;
+            $order->receid = $request->receid;
+            $order->recearea = $request->recearea;
+            $order->receCompanyname = $request->receCompanyname;
+            $order->recename = $request->recename;
+            $order->receEmail = $request->receEmail;
+            $order->recephone = $request->recephone;
+            $order->recepostcode = $request->recepostcode;
+            $order->receaddress = $request->receaddress;
+            $order->custname = $request->custname;
+            $order->custphone = $request->custphone;
+            $order->custpostcode = $request->custpostcode;
+            $order->custaddress = $request->custaddress;
+            $order->tax = $request->tax;
+            $order->paymemt =  $request->paymemt;
+            $order->cardtype =  $request->cardtype;
+            $order->vaDate = $request->vaDate;
+            $order->chequednum = $request->chequednum;
+            $order->shiptype = $request->shiptype;
+            $order->shipcountries = $request->shipcountries;
+            $order->shipfee = $request->shipfee;
+
+            $order->totalweight = $request->totalweight;
+            $order->cardnum =  $request->cardnum;
+            $order->totalqty =  $request->totalqty;
+            $order->totalcost =  $request->totalcost;
+            $order->totalamount =   $request->totalamount;
+            $order->paymentstatus =   $request->paymentstatus;
+            $order->remark =   $request->remark;
+            $order->createddate = Carbon::now();
+
+            $order->save();
+
+            if($request->location ?? $request->bookingtime !== null){
+            $booking = new Booking;
+            $booking->location = $request->location;
+            $booking->bookingtime = $request->bookingtime;
+            $order->booking()->save($booking);
+            }
+
+
+       
+         
+            // Insert order item detail based on the inserted order
+            $itemHamoCodes = $request->input('itemHamoCode', []);
+            $descs = $request->input('desc', []);
+            $itemQtys  = $request->input('itemQty', []);
+            $costs = $request->input('cost', []);
+            $linecosts = $request->input('linecost', []);
+            $prices = $request->input('price', []);
+            $lineprices = $request->input('lineprice', []);
+            $weights = $request->input('weight', []);
+            $lineweights = $request->input('lineweight', []);
+
+            for ($item = 0; $item < count($itemHamoCodes); $item++) {
+            //     $item = OrderDetail::where('orderid', $id)->first();
+                 $orderdetail = new OrderDetail;
+                if ($itemHamoCodes[$item] != '') {
+                    $orderdetail->itemHamoCode = $itemHamoCodes[$item];
+                    $orderdetail->desc = $descs[$item];
+                    $orderdetail->itemQty = $itemQtys[$item];
+                    $orderdetail->cost = $costs[$item];
+                    $orderdetail->price = $prices[$item];
+                    $orderdetail->weight = $weights[$item];
+                    $orderdetail->linecost = $linecosts[$item];
+                    $orderdetail->lineprice = $lineprices[$item];
+                    $orderdetail->lineweight = $lineweights[$item];
+
+                    $order->orderdetails()->save($orderdetail);
+                  
+                }
+               
+            }
+            
+        }
+
+       
+            
+       
+    }
+
+            // Redirect
+            return redirect('/orders/viewAll')->with('success','Successfully updated order detail!');
+        }
+
+
+
+    
+        public function duporder($id)
+        {
+            //
+            // Retrieve the order
+            $order = Order::find($id);
+        
+            // show the edit form and pass the order
+        //       return view('orders.edit', compact('order'));
+        return View::make('orders.duporder')->with('order', $order);   
+        }
+
+
+    
+
+
+    
 
     
 }

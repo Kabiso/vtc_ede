@@ -2,7 +2,46 @@
 
 @section('content')
 
-<div class="container col-md-10">
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+
+
+<style>
+#hidden{
+display: none;
+}
+#checkcom{
+display: none;
+}
+
+
+</style>
+
+
+
+
+
+
+
+  @if(session('success'))
+        <div class="alert alert-success">
+          {{ session('success') }}
+        </div> 
+        @endif
+        @if (count($errors) > 0)
+      <div class="alert alert-danger">
+        <strong>Whoops!</strong> Some problems with your input.<br><br>
+        <ul>
+          @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+      <div class="container col-md-10">
 <h1>Showing Shippment Order Number:                       {{ $order->orderid }}</h1>
 
 <div class="card">
@@ -36,12 +75,12 @@
        </div>
 
 
-   
-      
+  
 
    @foreach ($order->booking as $bk)
    <div class="card ">
-   <div class="card-header text-white cloginbar">Pick up Booking</div>
+    <div class="card-header text-white cloginbar">Pick up Booking</div>
+  
       <div class="row mt-3">
          <div class="col-4 text-right">Pickup Location:</div>
          <div class="col-4">{{  $bk->location   }}</div>
@@ -62,6 +101,10 @@
           <div class="row mt-3">
             <div class="col-4 text-right">Receiver Name:</div>
             <div class="col-4">{{  $order->recename   }}</div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-4 text-right">Receiver Email:</div>
+            <div class="col-4">{{  $order->receEmail   }}</div>
           </div>
           <div class="row mt-3">
             <div class="col-4 text-right">Receiver Phone Number/Fax Number:</div>
@@ -152,15 +195,76 @@
 </table>
 
 </div>
-</div>
+
+
+
 
 <!--<a href="{{ url('/showairwaybill/' . $order->orderid) }}" class="btn btn-xs btn-info pull-right">Edit</a>-->
 <!--<button type="button" onclick="window.location='{{ url("orders/airwaybill/".$order->orderid) }}'">Button</button>-->
 
 <div class="row my-4">
    <div class="col-4"></div>
-   <a class="p-3 mb-2 bg-danger text-white text-center"  href="{{URL::to('airwaybill',$order)  }}">Print Airway Bill</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a class="p-3 mb-2 bg-primary text-white text-center" styple="background-color: blue; "href="{{URL::to('commercialinvoice',$order)}}">Print Commercial Invoice</a>
+   <a class="p-3 mb-2 bg-danger text-white text-center" styple="height:10px;width:10px" href="{{URL::to('airwaybill',$order)  }}">Print Airway Bill</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <!--   <a class="p-3 mb-2 bg-primary text-white text-center" styple="background-color: blue; "href="{{URL::to('commercialinvoice',$order)}}">Print Commercial Invoice</a>
+-->   </div>
+    <div class="row my-4">
+    <div class="col-4"></div>
+      <form class="upload" method="post" action="{{url('preview-image-upload')}}" enctype="multipart/form-data"  >
+        @csrf
+      
+       
+          <input type="file" name="profile_image" id="profile_image" onchange="loadPreview(this);" class="form-control">
+          <div id='hidden'>{{ Form::text('uploadoid1', $order->orderid , array('class' => 'form-control')) }}
+          {{ Form::input('text','uploadoid', $order->orderid, array('class' => 'form-control')) }}</div>
+          <div id='checkcom'>{{ Form::input('text','checkcom', $order->checkcom, array('class' => 'form-control')) }}</div>
+          <label for="profile_image"  ></label>
+            <img id="preview_img"  src="http://w3adda.com/wp-content/uploads/2019/09/No_Image-128.png" class="" width="120" height="100"/>
+        
+
+        
+       
+          <button type="submit" class="p-3 mb-2 bg-primary text-white text-center" style="margin-top:10px">Please Upload the Commercial Invoice</button>  
+          @foreach ($order->Photo as $ph)
+
+                <a data-fancybox="gallery" style="float:right;" href={{ asset("/profile_images/$ph->photo_name") }}><img  width=150 src= {{ asset("/profile_images/$ph->photo_name") }} class="pic"></a>
+
+          @endforeach
+          </div>
+          </div>
    </div>
+
+          </div>
+        </div>
+        
+  </form>
+  </div>
+  </div>
    </div>
+
+</body>
+
+  </div>
+</body>
+</html>
+
+<script>
+  function loadPreview(input, id,oid) {
+    id = id || '#preview_img';
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+ 
+        reader.onload = function (e) {
+            $(id)
+                    .attr('src', e.target.result)
+                    .width(200)
+                    .height(150);
+        };
+ 
+        reader.readAsDataURL(input.files[0]);
+    }
+ }
+</script>
+
+</div>
 @endsection

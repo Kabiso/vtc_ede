@@ -13,6 +13,7 @@ use Input;
 use Session;
 use Redirect;
 use Illuminate\Http\Request;
+use App\charges;
 
 class OrderDetailController extends Controller
 {
@@ -180,4 +181,101 @@ class OrderDetailController extends Controller
         $orderdetail->delete();
         return redirect('orderdetailss')->with('success','Successfully deleted order detail!'); 
     }
+
+
+
+    public function  calfee(Request $request)
+    {
+        if($request->ajax())
+        {
+            
+           $weight = $request->weight;
+           $country = $request->shipcou;
+           $shipfee ="";
+            
+           // GC
+            if($weight <=0.5 && $weight >0) 
+            {
+                $shipfee = charges::where('shipweight','0.5')->first()->shipfee;
+            }
+
+            if($weight <=1  && $weight >0.5) 
+            {
+            $shipfee = charges::where('shipweight','1')->first()->shipfee;
+            }
+
+            if($weight <=1.5  && $weight >1)
+            {
+            $shipfee = charges::where('shipweight','1.5')->first()->shipfee;
+            }
+
+            if($weight <=2 && $weight >1.5)
+            {
+            $shipfee = charges::where('shipweight','2')->first()->shipfee;
+            }
+
+            if($weight <=2.5 && $weight >2)
+            {
+            $shipfee = charges::where('shipweight','2.5')->first()->shipfee;
+            }
+
+            if($weight <=3 && $weight >2.5)
+            {
+            $shipfee = charges::where('shipweight','3')->first()->shipfee;
+            }
+
+            //EF
+
+            if($weight <=15 && $weight >3)
+            {
+            $shipfeeperg = charges::where('shipweight','15')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight <=29 && $weight >15)
+            {
+            $shipfeeperg = charges::where('shipweight','29')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight <=44 && $weight >29)
+            {
+            $shipfeeperg = charges::where('shipweight','44')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight <=69 && $weight >44)
+            {
+            $shipfeeperg = charges::where('shipweight','44')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight <=99 && $weight >69)
+            {
+            $shipfeeperg = charges::where('shipweight','99')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight <=499 && $weight >99)
+            {
+            $shipfeeperg = charges::where('shipweight','499')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+            if($weight >= 500)
+            {
+            $shipfeeperg = charges::where('shipweight','500')->where('shiparea',$country)->first()->shipfee;
+            $shipfee = $shipfeeperg * $weight;
+            }
+
+        }
+
+        $data=array(
+            'shipfee' =>$shipfee
+        );
+
+        return Response($data);
+    }
+
+
 }

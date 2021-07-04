@@ -15,6 +15,7 @@ use Redirect;
 use App\OrderDetail;
 use App\Booking;
 use App\User;
+use App\Trackshipment;
 use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Support\Facades\Mail;
 
@@ -142,6 +143,7 @@ class staffOrderController extends Controller
           //Receiver
            'receCompanyname' =>  ['required', 'max:255'],
            'recename' => ['required', 'string', 'max:255'],
+           'receEmail' => ['required', 'string', 'max:255'],
            'recephone' =>  ['required', 'max:255'],
            'recepostcode' => ['required', 'max:4'],
            'receaddress' => ['required', 'max:255'],
@@ -179,6 +181,7 @@ class staffOrderController extends Controller
                //Receiver
               'receCompanyname.required' => 'Please input the Receiver Company Name',
                 'recename.required' => 'Please input the Receiver Name',
+                'receEmail.required' => 'Please input the Receiver Email',
                 'recephone.required' => 'Please input the Receiver Phone',
                 'recepostcode.required' => 'Please input the Receiver Post Code',
                 'receaddress.required' => 'Please input the Receiver Address',
@@ -206,13 +209,14 @@ class staffOrderController extends Controller
             return back()->withErrors($validator);
         } else {
             // Create a Order instance and configure the values before insert action
-            
+           
             $order->custid = $request->custid;
             $order->custarea = $request->custarea;
             $order->receid = $request->receid;
             $order->recearea = $request->recearea;
             $order->receCompanyname = $request->receCompanyname;
             $order->recename = $request->recename;
+            $order->receEmail = $request->receEmail;
             $order->recephone = $request->recephone;
             $order->recepostcode = $request->recepostcode;
             $order->receaddress = $request->receaddress;
@@ -236,6 +240,7 @@ class staffOrderController extends Controller
             $order->totalamount =   $request->totalamount;
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
+            $order->acceptanceTime =   $request->acceptanceTime;
             $order->save();
    
             // Insert order item detail based on the inserted order
@@ -262,12 +267,70 @@ class staffOrderController extends Controller
                     $orderdetail->lineprice = $lineprices[$item];
                     $orderdetail->lineweight = $lineweights[$item];
 
+                    
+
 
                     $order->orderdetails()->save($orderdetail);
                 }
             }
         }
-      
+            
+        if($request->status != null || $request->status != ""){
+            Trackshipment::create([
+                'orderid' => $order->orderid,
+                'status' => $request->status,
+                'location' => $request->location,
+               
+        
+        
+            ]);
+         
+            
+            if( $request['status'] == 'Complete')
+            {   
+                $data = 
+                [
+                'orderid'=>$order->orderid,
+                'custname'=>$order->custname
+                ];
+
+                $to =[ 
+                
+                 'email' =>  user::find($order->custid)->email,
+                'name' =>$order->custname
+                ];
+
+//send email
+                Mail::send('emails.post', $data, function($message)use ($to) {
+            
+                $message->to($to['email'], $to['name'])->subject('Order Complete');
+                });
+
+            }
+
+//Delivered
+            if( $request['status'] == 'Delivered')
+            {
+                    $data = 
+                    [
+                    'orderid'=>$order->orderid,
+                    'recename'=>$order->recename
+                    ];
+
+                    $to =[ 
+                        
+                    'email' =>  Order::find($order->orderid)->receEmail,
+                    'name' =>$order->recename
+                    ];
+            
+//send email
+            Mail::send('emails.delivered', $data, function($message)use ($to) {
+        
+            $message->to($to['email'], $to['name'])->subject('Order Delivered');
+            });
+
+            }
+        }   
         return redirect('/staff/orderindex')->with('message', 'Order is Updated!');  
     }
 

@@ -12,7 +12,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Order Status</th>
+                            
                               <th scope="col">Order Number</th>
                               <th scope="col">Receiver Name</th> 
                               <th scope="col">Shipment Type</th>
@@ -20,14 +20,14 @@
                               <th scope="col">Shipment Fee</th>
                               <th scope="col">Payment Status</th>
                               <th scope="col">View Order Detail</th>
-                              
+                              <th scope="col">Duplicate</th>
                             </tr>
                           </thead>
 
                           <tbody>
                             @foreach($orders as $order)
                             <tr>
-                                <td>{{$order->orderstatus}}</td>
+                                
                                 <td>{{$order->orderid}}</td>
                                 <td>{{$order->recename}}</td>
                                 <td>{{$order->shiptype}}</td>
@@ -35,7 +35,7 @@
                                 <td>{{$order->shipfee}}</td>
                                 <td>{{$order->paymentstatus}}</td>
                                 <td><button class="btn btn-info text-white" onclick="window.location='/viewOrderDetail/{{$order->orderid}}'"  >View Order Detail</button></td>
-                                
+                                <td><button class="btn btn-success text-white" onclick="window.location='/orders/duporder/{{$order->orderid}}'" >Duplicate</button></td>
 
                             </tr>
                             @endforeach

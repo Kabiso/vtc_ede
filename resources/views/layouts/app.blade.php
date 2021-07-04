@@ -77,6 +77,10 @@
                             <a class="nav-link text-white" href="{{ URL::to('monthlypay/') }}">Monthly Payment Orders</a>
                           </li>
 
+                          <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ URL::to('/live_search') }}">check Tracks shipment</a>
+                          </li>
+
 
                     </ul>
 
@@ -129,7 +133,7 @@
                 </div>
             </div>
         </nav>
-
+        
         <main class="py-4">
 
 

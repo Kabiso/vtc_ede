@@ -1,4 +1,4 @@
-@extends('layouts.staffhead')
+@extends('layouts.app')
 
    
 @section('content')
@@ -87,9 +87,9 @@ $(document).ready(function () {
         calculateCostTotal();
     });
 
+    
 
-// Calculate the  ship fee
-$("#shipcountries, #totalweight").change(function(){
+    $("#shipcountries, #totalweight").change(function(){
         
         $.ajaxSetup({
         headers: {
@@ -120,9 +120,6 @@ $("#shipcountries, #totalweight").change(function(){
         });
         
     });
-    
-
-
 
 
 
@@ -152,7 +149,6 @@ function calculateGrandTotal() {
     });
     $("#grandtotal").text(grandTotal.toFixed(2));
     $("#tweight .form-control").val(grandTotal.toFixed(2));
-    $("#totalweight").trigger('change');
     
 }
 
@@ -271,18 +267,27 @@ $(function(){
 
 </script>
 @if((Auth::guard('web')->check()))
-<div class="container col-md-10">
+<div class="container col-md-12">
 
 @else
 <h1>Staff Page</h1>
-<div class="container col-md-10">
+<div class="container col-md-12">
 @endif
-<h1>Edit a Shipment Order</h1>
+<h1>Duplicate Shipment Order</h1>
 
-{!! Form::open(['action' =>['staffOrderController@updateorder',$order->orderid], 'method' => 'post','files'=>true])!!}
+{!! Form::open(['action' =>['OrderController@updateorderb',$order->orderid], 'method' => 'post','files'=>true])!!}
 @csrf
+
+
 <div class="card">
 <div class="card-header text-white cloginbar">Customer Information</div>
+
+
+</div>
+<div class="row mt-3 ">   
+<div class="col-4 text-right ">{{ Form::label( 'Shippment order duplicate time') }}</div>
+<div class="col-4">{{ Form::number('copy', null , array('class' => 'form-control')) }}</div>
+</div>
 
 
 <div class="row mt-3 ">    
@@ -345,7 +350,34 @@ $(function(){
 </div>
 
 
-
+<div class="card ">
+    <div class="card-header text-white cloginbar">Pick up Booking</div>
+    <div class="card-body">
+    <div class="row">
+    
+        <div class="col-4 text-right ">{{ Form::label('location', 'Pickup Location') }}</div>
+        @if (isset($order->Booking->first()->location))
+        <div class="col-4 ">{{ Form::text('location', old('location') ?? $order->Booking->first()->location, array('class' => 'form-control')) }}</div>
+    
+        @else
+        <div class="col-4 ">{{ Form::text('location', old('location'), array('class' => 'form-control')) }}</div>
+        @endif
+       
+    </div>
+    
+    
+    <div class="row mt-3">
+    
+        <div class="col-4 text-right">{{ Form::label('bookingtime', 'Pickup Time') }}</div>
+        
+       
+        <div class="col-4">{{ Form::input('datetime-local','bookingtime',old('bookingtime'), array('class' => 'form-control')) }}</div>
+        
+        
+    
+    </div>
+    </div>
+    
 
 
 
@@ -400,7 +432,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recearea', 'Receiver Country') }}</div>
-    <div class="col-4">{{ Form::select('recearea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), old('custarea') ?? $order->recearea, array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::select('recearea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), old('custarea') ?? $order->custarea, array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -502,7 +534,7 @@ $(function(){
 <div class="card">
 <div class="card-header text-white cloginbar">Shipment Information</div>
 <div class="card-body">
-
+      
 <div class="row">
 
     <div class="col-4 text-right">{{ Form::label('shiptype', 'Shipment Type') }}</div>
@@ -517,14 +549,14 @@ $(function(){
 
 </div>
 
-<div >
+<div id ='shipfee'>
 <div class="row mt-3">
     <div class="col-4 text-right">{{ Form::label('shipfee', 'Shipment Fee') }}</div>
    
   @if((Auth::guard('web')->check()))
     <div class="col-4">{{ Form::text('shipfee',old('shipfee') ?? $order->shipfee, array('class' => 'form-control','readonly')) }}</div>
     @else
-    <div class="col-4" >{{ Form::text('shipfee', old('shipfee') ?? $order->shipfee, array('class' => 'form-control')) }}</div>
+    <div class="col-4" >{{ Form::number('shipfee', old('shipfee') ?? $order->shipfee, array('class' => 'form-control')) }}</div>
     @endif
 
  </div>
@@ -573,15 +605,15 @@ $(function(){
 
     <tbody>
         <tr>
-            <td><input type="text" size="10" name="itemHamoCode[]" value="{{$order->orderdetails->first()->itemHamoCode}}" /></td>
+            <td><input type="text" size="10" name="itemHamoCode[]" value="{{$order->orderdetails->first()->itemHamoCode}}"  /></td>
             <td><input type="text" size="13" name="desc[]" value="{{$order->orderdetails->first()->desc}}" /></td>
             <td><input type="number" size="3" step="1" name="itemQty[]" value="{{$order->orderdetails->first()->itemQty}}" /></td>
-            <td><input type="number" size="5" name="weight[]" value="{{$order->orderdetails->first()->weight}}"/></td>
-            <td><input type="number" size="3" name="cost[]" value="{{$order->orderdetails->first()->cost}}" /></td>
-            <td><input type="number" size="5" name="price[]" value="{{$order->orderdetails->first()->price}}" /></td>
-            <td><input type="text" size="5" name="lineweight[]" readonly="readonly"  value="{{$order->orderdetails->first()->lineweight}}"/></td>
-            <td><input type="text" size="5" name="lineprice[]" readonly="readonly"  value="{{$order->orderdetails->first()->lineprice}}"/></td>
-            <td><input type="text" size="5" name="linecost[]" readonly="readonly"  value="{{$order->orderdetails->first()->linecost}}"/></td>
+            <td><input type="number" size="5" name="weight[]"  value="{{$order->orderdetails->first()->weight}}" /></td>
+            <td><input type="number" size="3" name="cost[]"  value="{{$order->orderdetails->first()->cost}}"/></td>
+            <td><input type="number" size="5" name="price[]" value="{{$order->orderdetails->first()->price}}"/></td>
+            <td><input type="text" size="5" name="lineweight[] "  value="{{$order->orderdetails->first()->lineweight}}" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="lineprice[]" value="{{$order->orderdetails->first()->lineprice}}" readonly="readonly" /></td>
+            <td><input type="text" size="5" name="linecost[]" value="{{$order->orderdetails->first()->linecost}}" readonly="readonly" /></td>
             <td><a class="deleteRow"> x </a></td>
         </tr>
     </tbody>
@@ -595,17 +627,17 @@ $(function(){
 
         <tr>
             <td colspan="5">
-                Weight Total:<span id="grandtotal">{{$order->totalweight}}</span>
+                Weight Total:<span id="grandtotal"></span>
             </td>
         </tr>
         <tr>
             <td colspan="5">
-                Grand Total: $<span id="pricetotal">{{$order->totalamount}}</span>
+                Grand Total: $<span id="pricetotal"></span>
             </td>
         </tr>
         <tr>
             <td colspan="5">
-                Cost Total: $<span id="costtotal">{{$order->totalcost}}</span>
+                Cost Total: $<span id="costtotal"></span>
             </td>
         </tr>
     </tfoot>
@@ -628,58 +660,6 @@ $(function(){
         </div>-->
 </div>
 
-<!-- display tracking shipment -->
-<div class="card" style="text-align: center">
-    <div class="card-header text-white cloginbar">Update Tracking Shipment</div>
-
-    <div class="row my-3 ">
-
-        <div class="col-4 text-right font-weight-bold ">{{ Form::label('acceptanceTime', 'Time for acceptance') }}</div>
-        @if ($order->acceptanceTime != null)
-        <div class="col-4">{{ Form::input('datetime-local','acceptanceTime',old('acceptanceTime')?? date('Y-m-d\TH:i', strtotime($order->acceptanceTime)) ,array('class' => 'form-control')) }}</div> 
-        @else
-        <div class="col-4">{{ Form::input('datetime-local','acceptanceTime',old('acceptanceTime'),array('class' => 'form-control')) }}</div>    
-        @endif
-        
-    </div>
-
-           <table class="table table-striped table-bordered" style="text-align: center">
-               <thead>
-                <tr>
-                 <th class="col-4">{{ Form::label('status', 'Status') }}</th>
-                 <th class="col-4">{{ Form::label('location', 'Location') }}</th>
-                </tr>
-                <tr>  
-                 <th class="col-4">{!! Form::select('status', array( null=>'Please Select' ,'Pending' => 'Pending','Delivering' => 'Delivering', 'Delivered' => 'Delivered', 'Received' => 'Received', 'Complete' => 'Complete', 'Cancel'=> 'Cancel' ), null, array('class' => 'form-control')); !!}</th>
-                 <th class="col-4">{!! Form::select('location', array(null=>'Please Select','Hong Kong Airport' => 'Hong Kong Airport', 'China-ShangHai Airport' => 'China-ShangHai Airport', 'Australia Airport' => 'Australia Airport', 'Japan Airport' => 'Japan Airport', 'On-flight' => 'On-flight', 'Freight Store' => 'Freight Store','Envelope locker' => 'Envelope Locker', 'Delivered' => 'Delivered'), null, array('class' => 'form-control')); !!}</th>
-               </tr>
-               </thead>
-              </table>
-
-
-    <table class="table table-striped table-bordered">
-        <thead>
-         <tr>
-            <th><p >Status</p></th>
-            <th><p >Time</p></th>
-            <th><p >Location</p></th>
-        </tr>
-        </thead>    
-        <tbody>  
-          @foreach (App\Trackshipment::where('orderid', $order->orderid)->orderBy('created_at', 'DESC')->get() as $trackshipment)
-           <tr>
-            <td >{{$trackshipment->status}}</td>
-            <td >{{$trackshipment->created_at}}</td>
-            <td >{{$trackshipment->location}}</td> 
-           </tr>
-          @endforeach
-        </tbody>
-       </table>
-    </div>
-   
- <!-- update tracking shipment --> 
- 
-</div>
 
 <div class="row my-3">
     <div class="col-2"></div>

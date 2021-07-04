@@ -23,6 +23,10 @@ use App\Http\Controllers\staffOrderController;
 //  for customer 
 Auth::routes();
 
+//for upload comm inv
+Route::get('preview-image-upload', 'simple_image_upload\ImageUploadController@index');
+Route::post('preview-image-upload', 'simple_image_upload\ImageUploadController@store');
+
 Route::get('/', 'OrderController@viewOrderCust')->name('home')->middleware('auth');
 Route::get('/home','OrderController@viewOrderCust')->name('home');
 
@@ -39,6 +43,10 @@ Route::patch('/profile/{user}', 'profileController@update')->name('profile.updat
 // View all order
 Route::get('orders/viewAll','OrderController@viewOrderCust')->name('orders.custView');
 
+//duplicate order 
+Route::get('orders/duporder/{order}', 'OrderController@duporder')->name('order.duporder');
+Route::post('orders/updateorderb/{order}', 'OrderController@updateorderb')->name('orders.orderorder');
+
 //Monthly payment
 Route::get('settlepayment/{order}', 'monthlypayController@settlepay')->name('settlepay.view');
 Route::post('settlepayment/{order}/success','monthlypayController@success')->name('settlepay.success');
@@ -53,10 +61,15 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
     Route::get('/show_vehicle', 'VehicleController@showVehicle');
     Route::get('orders/createorderwithdetails', 'OrderController@createorderwithdetails')->name('orders.createorderwithdetails');
     Route::post('orders/storewithdetails', 'OrderController@storewithdetails')->name('orders.storewithdetails');
-
+    Route::get('orderdetails/calfee','OrderDetailController@calfee')->name('orders.calfee');
     Route::resource('orders', 'OrderController');
     Route::resource('orderdetails', 'OrderDetailController');
     Route::post('/posts/confirmation', 'PostController@confirmation');
+
+    // Track shipment
+    Route::get('/live_search', 'LiveSearch@index');
+    Route::get('/live_search/action', 'LiveSearch@action')->name('live_search.action');
+    
 
     //for print airwaybill
     Route::resource('airwaybill', 'airwaybillController');
@@ -104,7 +117,8 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
     Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
     Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
-    // Route::get('staff/action','staffAcctController@action')->name('staffacct.search');   
+    Route::get('staff/staffacct/search', 'staffAcctController@getstaff')->name('staffacct.earch');
+      
     
 
 
@@ -123,7 +137,6 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/orderindex','staffOrderController@view')->name('staff.orderindex');
     Route::get('staff/orderedit/{order}', 'staffOrderController@edit')->name('staff. orderedit');
     Route::post('staff/updateorder/{order}', 'staffOrderController@updateorder')->name('staff.orderorder');
-    Route::post('staff/changestatus/{order}', 'staffOrderController@changestatus')->name('orders.changestatus ');
     Route::get('staff/ordersearch','staffOrderController@search')->name('staff.search');
 
 
