@@ -211,7 +211,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthely Pay'){
+           }else if(opt == 'Monthly Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -219,7 +219,7 @@ $(function(){
           
         $("#paystatust select").val(pay);
            }else if(opt == 'Pay Pal'){
-            var pay ='Paid';
+            var pay ='Pay Online';
             $('#creditcard').hide();
             $('#cheque').hide();  
           
@@ -444,7 +444,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Mothed') }}</div>
-    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), $order->paymemt ?? old('paymemt'), array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthly Pay' => 'Monthly Pay'), $order->paymemt ?? old('paymemt'), array('class' => 'form-control')); !!}</div>
     <!--<div class="col-4">{{ Form::text('paymemt', old('payment') , array('class' => 'form-control')) }}</div> -->
 
 </div>
@@ -485,7 +485,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right" >{{ Form::label('paymentstatus', 'Payment Status') }}</div>
-    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight'), old('paymentstatus') ?? $order->paymentstatus, array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight','Pay Online' => 'Pay Online'), old('paymentstatus') ?? $order->paymentstatus, array('class' => 'form-control')); !!}</div>
 
 </div>
 </div>

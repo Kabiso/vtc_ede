@@ -330,7 +330,8 @@ $(function(){
 $(function(){
     var pay ='Paid';
     var pay2 ='Waiting to Pay';
-    $('#cpayment1 .form-control').change(function(){
+    var pay3 ='Pay Online';
+    $('#payment .form-control').change(function(){
        var opt = $(this).val();
         if(opt == 'Credit Card'){
 
@@ -364,7 +365,7 @@ $(function(){
           
         $("#paystatust select").val(pay);
            }else if(opt == 'Pay Pal'){
-            var pay ='Paid';
+            var pay ='Pay Online';
             $('#creditcard').hide();
             $('#cheque').hide();  
           
@@ -627,7 +628,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right" >{{ Form::label('paymentstatus', 'Payment Status') }}</div>
-    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight', 'Pay Online' => 'Pay Online'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight' ,'Pay Online' => 'Pay Online'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
 
 </div>
 </div>
