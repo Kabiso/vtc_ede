@@ -25,7 +25,7 @@ class staffOrderController extends Controller
     
     public function view()
     {
-        $orders = Order::orderBy('orderid','desc')->paginate(15);
+        $orders = Order::orderBy('orderid','desc')->paginate(10);
 
         return View::make('staff.orderindex')->with('orders', $orders);
     }

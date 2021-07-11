@@ -9,6 +9,9 @@
 #creditcard{
     display: none;
 }
+#receid{
+    display: none;
+}
 
 #cheque
 {
@@ -19,7 +22,10 @@
 {
     display: none;
 }
-
+#custid
+{
+    display: none;
+}
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -237,7 +243,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthly Pay'){
+           }else if(opt == 'Monthely Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -295,7 +301,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthly Pay'){
+           }else if(opt == 'Monthely Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -350,7 +356,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthly Pay'){
+           }else if(opt == 'Monthely Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -390,24 +396,17 @@ $(function(){
 
 @else
 <h1>Staff Page</h1>
+<h1>Create a Import Shipment Order</h1>
 <div class="container col-md-10">
 @endif
-<h1>Create a Shipment Order</h1>
+<h1>Create a Import Shipment Order</h1>
 
 {!! Form::open(['action' =>'OrderController@storewithdetails', 'method' => 'POST','files'=>true])!!}
 @csrf
 <div class="card">
-<div class="card-header text-white cloginbar">Customer Information</div>
+<div class="card-header text-white cloginbar">Sender Information</div>
 
 
-<div class="row mt-3 ">    
-    <div class="col-4 text-right ">{{ Form::label('custid', 'Customor Account No.') }}</div>
-    @if((Auth::guard('web')->check()))
-    <div class="col-4">{{ Form::text('custid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div>
-    @else
-    <div class="col-4" id="cid">{{ Form::text('custid',old('custid'),array('class' => 'form-control')) }}</div>
-    @endif
-</div>
 
 <!-----
 <div class="row mt-3">
@@ -418,12 +417,12 @@ $(function(){
 </div> --->
 
 
-
+<div id='custid'><div class="col-4">{{ Form::text('custid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div></div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custname', 'Customer Name') }}</div>
-    <div class="col-4" >{{ Form::text('custname', Auth::user()->custname, array('class' => 'form-control')) }}</div>
+    <div class="col-4 text-right">{{ Form::label('custname', 'Sender Name') }}</div>
+    <div class="col-4" >{{ Form::text('custname', old('custname') , array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -432,29 +431,29 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custphone', 'Customer Phone Number') }}</div>
-    <div class="col-4" >{{ Form::text('custphone',  Auth::user()->contactNo, array('class' => 'form-control')) }}</div>
+    <div class="col-4 text-right">{{ Form::label('custphone', 'Sender Phone Number') }}</div>
+    <div class="col-4" >{{ Form::text('custphone',old('custphone') , array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Customer Post Code') }}</div>
-    <div class="col-4">{{ Form::text('custpostcode', '0000', array('class' => 'form-control')) }}</div>
+    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Sender Post Code') }}</div>
+    <div class="col-4">{{ Form::text('custpostcode', Null , array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('cutarea', 'Customer Country') }}</div>
-    <div class="col-4">{{ Form::select('custarea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
-
+    <div class="col-4 text-right">{{ Form::label('cutarea', 'Sender Country') }}</div>
+    <div class="col-4">{{ Form::select('custarea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA'), 'AUSTRALIA', array('class' => 'form-control')) }}</div>
+    
 </div>
 
 <div class="row mt-3 mb-3">
 
-    <div class="col-4 text-right">{{ Form::label('custaddress', 'Customer Address') }}</div>
-    <div class="col-4" >{{ Form::text('custaddress', Auth::user()->custAddress, array('class' => 'form-control')) }}</div>
+    <div class="col-4 text-right">{{ Form::label('custaddress', 'Sender Address') }}</div>
+    <div class="col-4" >{{ Form::text('custaddress', old('custaddress'), array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -495,54 +494,61 @@ $(function(){
 
 </div>
 -->
-
-
+<div id='receid'>
+<div class="row mt-3 ">    
+    <div class="col-4 text-right ">{{ Form::label('receid', 'Receiver Account No.') }}</div>
+    @if((Auth::guard('web')->check()))
+    <div class="col-4">{{ Form::text('receid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div>
+    @else
+    <div class="col-4" id="cid">{{ Form::text('receid',old('receid'),array('class' => 'form-control')) }}</div>
+    @endif
+</div>
+</div>
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('receCompanyname', 'Receiver Company Name') }}</div>
-    <div class="col-4">{{ Form::text('receCompanyname', old('receCompanyname'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('receCompanyname', Auth::user()->custname , array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recename', 'Receiver Name') }}</div>
-    <div class="col-4">{{ Form::text('recename', old('recename'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('recename',  Auth::user()->custname, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('receEmail', 'Receiver Email') }}</div>
-    <div class="col-4">{{ Form::text('receEmail', old('receEmail'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('receEmail',  Auth::user()->email, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recephone', 'Receiver Phone Number/Fax Number') }}</div>
-    <div class="col-4">{{ Form::text('recephone', old('recephone'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('recephone',  Auth::user()->contactNo , array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recepostcode', 'Receiver Post Code') }}</div>
-    <div class="col-4">{{ Form::text('recepostcode', old('recepostcode'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('recepostcode', '0000', array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('recearea', 'Receiver Country') }}</div>
-    <div class="col-4">{{ Form::select('recearea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
-
+     <div class="col-4">{{ Form::select('recearea', array('HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
 </div>
 
 <div class="row my-3">
 
     <div class="col-4 text-right">{{ Form::label('receaddress', 'Receiver Address') }}</div>
-    <div class="col-4">{{ Form::text('receaddress', old('receaddress'), array('class' => 'form-control')) }}</div>
+    <div class="col-4">{{ Form::text('receaddress',Auth::user()->custAddress , array('class' => 'form-control')) }}</div>
 
 </div>
 
@@ -578,9 +584,9 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Method') }}</div>
+    <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Mothed') }}</div>
     
-    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'PayPal' => 'PayPal','Credit Card' => 'Credit Card', 'Monthly Pay' => 'Monthly Pay'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'PayPal' => 'PayPal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
  
      
 </div>
@@ -648,7 +654,7 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('shipcountries', 'Shipment Countries') }}</div>
+    <div class="col-4 text-right">{{ Form::label('shipcountries', 'Shipment From') }}</div>
     <div class="col-4">{!! Form::select('shipcountries', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA'), 'JAPAN', array('class' => 'form-control')); !!}</div>
 
 </div>

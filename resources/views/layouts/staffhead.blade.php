@@ -9,7 +9,7 @@
 
     <title>Eastern Delivery Express Limited</title>
 
-    
+
      <!-- JavaScript for Bootstrap -->
     <script src="{{ asset('js/app.js') }}" type="text/js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -24,18 +24,18 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-  
+
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 
 
-    
+
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light sloginbar shadow-sm ">
             <div class="container">
 
-                
+
                 <a class="navbar-brand text-white   " href="{{ url('staff/') }}">
                     EDE
                 </a>
@@ -50,18 +50,18 @@
                         <li class="nav-item active ">
                             <a class="nav-link text-white" href="{{ URL::to('staff/') }}">Home<span class="sr-only">(current)</span></a>
                           </li>
-                          
-                          
+
+
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Orders</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ URL::to('/staff/orderindex') }}">View All Orders</a>
                                 <a class="dropdown-item" href="{{ URL::to('/staff/viewbooking') }}">View All Pick Up Booing</a>
-                                
+
 
                             @canany(['sysAdmin' , 'normalStaff'])
                               <a class="dropdown-item " href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
-                                
+
                             @endcanany
 
                             </div>
@@ -80,16 +80,19 @@
                           </li>
                           @endcan
 
-                          <!------
+
+                         
+                      
                           @canany(['sysAdmin' , 'acct' ,'manager'])
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">View Analyze Report</a>
-                                <a class="dropdown-item" href="{{ URL::to('#') }}">View Financial Report</a>
+
+                                <a class="dropdown-item" href="{{ URL::to('/report') }}">Generate Report</a>
+                                
                             </div>
                           </li>
-                          @endcan----->
+                          @endcanany
 
                           @can('sysAdmin')
                           <li class="nav-item dropdown">
@@ -113,7 +116,7 @@
                           </li>
                           @endcan
 
-                          
+
 
 
                     </ul>
@@ -121,15 +124,15 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                  
+
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
-                            
-                        @else  
-                        
-                        
+
+                        @else
+
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-white " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->stfName }}
@@ -154,7 +157,7 @@
                 </div>
             </div>
         </nav>
-       
+
         <main class="py-4">
 
             @if (count($errors) > 0)
@@ -174,10 +177,10 @@
                 </div>
             @endif
 
-            
+
             @yield('content')
         </main>
-        
+
     </div>
 </body>
 </html>

@@ -20,7 +20,6 @@
     display: none;
 }
 
-
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
@@ -89,7 +88,8 @@ $(document).ready(function () {
 
     
 
-    $("#shipcountries, #totalweight").change(function(){
+    // Calculate the  ship fee
+$("#shipcountries, #totalweight").change(function(){
         
         $.ajaxSetup({
         headers: {
@@ -181,6 +181,7 @@ $('#creditcard').hide();
 $(function(){
     var pay ='Paid';
     var pay2 ='Waiting to Pay';
+    $("#paystatust select").val(pay2);
     $('#payment .form-control').change(function(){
        var opt = $(this).val();
         if(opt == 'Credit Card'){
@@ -215,7 +216,7 @@ $(function(){
           
         $("#paystatust select").val(pay);
            }else if(opt == 'Pay Pal'){
-            var pay ='Paid';
+            var pay ='Pay Online';
             $('#creditcard').hide();
             $('#cheque').hide();  
           
@@ -273,25 +274,25 @@ $(function(){
 <h1>Staff Page</h1>
 <div class="container col-md-12">
 @endif
-<h1>Duplicate Shipment Order</h1>
+<h1>Copy Shipment Order</h1>
 
 {!! Form::open(['action' =>['OrderController@updateorderb',$order->orderid], 'method' => 'post','files'=>true])!!}
 @csrf
 
 
 <div class="card">
-<div class="card-header text-white cloginbar">Customer Information</div>
+<div class="card-header text-white cloginbar">Sender  Information</div>
 
 
 </div>
 <div class="row mt-3 ">   
-<div class="col-4 text-right ">{{ Form::label( 'Shippment order duplicate time') }}</div>
-<div class="col-4">{{ Form::number('copy', null , array('class' => 'form-control')) }}</div>
+<div class="col-4 text-right ">{{ Form::label( 'Shippment order Copy Time') }}</div>
+<div class="col-4">{{ Form::select('copy', array( 0 => 0, 10 => 10 ,20 => 20 , 30 => 30 ), 0 , array('class' => 'form-control')) }}</div>
 </div>
 
 
 <div class="row mt-3 ">    
-    <div class="col-4 text-right ">{{ Form::label('custid', 'Customor Account No.') }}</div>
+    <div class="col-4 text-right ">{{ Form::label('custid', 'Sender  Account No.') }}</div>
    
     <div class="col-4">{{ Form::text('custid',old('custid') ?? $order->custid,array('class' => 'form-control')) }}</div>
     
@@ -300,7 +301,7 @@ $(function(){
 <!-----
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('creditLimit', 'Customer Credit Limit') }}</div>
+    <div class="col-4 text-right">{{ Form::label('creditLimit', 'Sender  Credit Limit') }}</div>
     <div class="col-4">{{ Form::text('creditLimit', Auth::user()->creditLimit, array('class' => 'form-control','readonly')) }}</div>
 
 </div> --->
@@ -310,7 +311,7 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custname', 'Customer Name') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custname', 'Sender  Name') }}</div>
     <div class="col-4">{{ Form::text('custname', old('custname') ?? $order->custname, array('class' => 'form-control')) }}</div>
 
 </div>
@@ -320,28 +321,28 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custphone', 'Customer Phone Number') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custphone', 'Sender  Phone Number') }}</div>
     <div class="col-4">{{ Form::text('custphone',  old('custphone') ?? $order->custphone, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Customer Post Code') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Sender  Post Code') }}</div>
     <div class="col-4">{{ Form::text('custpostcode', old('custpostcode') ?? $order->custpostcode, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('cutarea', 'Customer Country') }}</div>
+    <div class="col-4 text-right">{{ Form::label('cutarea', 'Sender  Country') }}</div>
     <div class="col-4">{{ Form::select('custarea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), old('custarea') ?? $order->custarea, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3 mb-3">
 
-    <div class="col-4 text-right">{{ Form::label('custaddress', 'Customer Address') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custaddress', 'Sender  Address') }}</div>
     <div class="col-4">{{ Form::text('custaddress', old('custaddress') ?? $order->custaddress, array('class' => 'form-control')) }}</div>
 
 </div>
@@ -357,7 +358,7 @@ $(function(){
     
         <div class="col-4 text-right ">{{ Form::label('location', 'Pickup Location') }}</div>
         @if (isset($order->Booking->first()->location))
-        <div class="col-4 ">{{ Form::text('location', old('location') ?? $order->Booking->first()->location, array('class' => 'form-control')) }}</div>
+        <div class="col-4 ">{{ Form::text('location', null, array('class' => 'form-control')) }}</div>
     
         @else
         <div class="col-4 ">{{ Form::text('location', old('location'), array('class' => 'form-control')) }}</div>
@@ -476,7 +477,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Mothed') }}</div>
-    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), $order->paymemt ?? old('paymemt'), array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'Pay Pal' => 'Pay Pal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'),'Wait to Calculate the Weight of the goods', array('class' => 'form-control')); !!}</div>
     <!--<div class="col-4">{{ Form::text('paymemt', old('payment') , array('class' => 'form-control')) }}</div> -->
 
 </div>
@@ -517,7 +518,7 @@ $(function(){
 <div class="row mt-3">
 
     <div class="col-4 text-right" >{{ Form::label('paymentstatus', 'Payment Status') }}</div>
-    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Paid' => 'Paid', 'Waiting to Pay' => 'Waiting to Pay','Wait to Calculate the Weight' => 'Wait to Calculate the Weight'), old('paymentstatus') ?? $order->paymentstatus, array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = 'paystatust'>{!! Form::select('paymentstatus', array('Pay Online' => 'Pay Online', 'Waiting to Pay' => 'Waiting to Pay','Paid' => 'Paid', 'Wait to Calculate the Weight' => 'Wait to Calculate the Weight'), 'Waiting to Pay', array('class' => 'form-control')); !!}</div>
 
 </div>
 </div>
@@ -663,7 +664,7 @@ $(function(){
 
 <div class="row my-3">
     <div class="col-2"></div>
-    <div class="col-8 text-center">{{ Form::submit('Update the Order!', array('class' => 'btn btn-primary')) }}</div>
+    <div class="col-8 text-center">{{ Form::submit('Created the Order!', array('class' => 'btn btn-primary')) }}</div>
     <div class="col-2"></div>
 </div>
 </div>

@@ -46,11 +46,19 @@ Route::get('orders/viewAll','OrderController@viewOrderCust')->name('orders.custV
 //duplicate order 
 Route::get('orders/duporder/{order}', 'OrderController@duporder')->name('order.duporder');
 Route::post('orders/updateorderb/{order}', 'OrderController@updateorderb')->name('orders.orderorder');
+Route::get('orders/orderindex','OrderController@view')->name('orders.orderindex');
+//Route::get('orders/orderedit/{order}', 'OrderController@edit')->name('orders.editorder');
+
+Route::get('orders/orderedit/{order}', 'OrderController@edit')->name('orders.orderedit');
+Route::post('orders/updateorder/{order}', 'OrderController@updateorder')->name('orders.orderorder');
+
 
 //Monthly payment
 Route::get('settlepayment/{order}', 'monthlypayController@settlepay')->name('settlepay.view');
 Route::post('settlepayment/{order}/success','monthlypayController@success')->name('settlepay.success');
 Route::get('monthlypay','monthlypayController@view')->name('monthlypay.view');
+Route::get('monthlypay/searchdate','monthlypayController@searchdate')->name('monthlypay.searchdate');
+Route::get('monthlyinvoice/{month}','monthlypayController@invoice')->name('monthlypay.invoice');
 
 
 });
@@ -61,14 +69,25 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
     Route::get('/show_vehicle', 'VehicleController@showVehicle');
     Route::get('orders/createorderwithdetails', 'OrderController@createorderwithdetails')->name('orders.createorderwithdetails');
     Route::post('orders/storewithdetails', 'OrderController@storewithdetails')->name('orders.storewithdetails');
-    Route::get('orderdetails/calfee','OrderDetailController@calfee')->name('orders.calfee');
+    
+
+    //import order 
+   Route::get('orders/createorderwithdetailsb', 'OrderController@createorderwithdetailsb')->name('orders.createorderwithdetailsb');
+   Route::post('orders/storewithdetails', 'OrderController@storewithdetails')->name('orders.storewithdetailsb');
+
+   Route::get('orderdetails/calfee','OrderDetailController@calfee')->name('orders.calfee');
     Route::resource('orders', 'OrderController');
     Route::resource('orderdetails', 'OrderDetailController');
     Route::post('/posts/confirmation', 'PostController@confirmation');
 
+    
+
     // Track shipment
     Route::get('/live_search', 'LiveSearch@index');
     Route::get('/live_search/action', 'LiveSearch@action')->name('live_search.action');
+
+    //Report
+    Route::get('/report', 'ReportController@index');
     
 
     //for print airwaybill
@@ -76,6 +95,9 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
 
     //for print commercialinvoice
      Route::resource('commercialinvoice', 'CommercialinvoiceController');
+
+      //for print customer inv
+  Route::resource('invoicecust', 'invoiceController'); 
 
     //View Monthly Payment
    

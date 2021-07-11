@@ -12,7 +12,7 @@
     
      <!-- JavaScript for Bootstrap -->
     <script src="{{ asset('js/app.js') }}" type="text/js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -63,27 +63,33 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
-
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">View Orders</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                        
-                          <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ URL::to('orders/viewAll') }}">View All Orders</a>
-                          </li>
-
-                          <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
-                          </li>
-
+                            <a class="dropdown-item" href="{{ URL::to('orders/viewAll') }}">View All Orders</a>
+                         
+                            <a class="dropdown-item" href="{{ URL::to('orders/orderindex') }}">View Copy Orders & Edit</a>
+                            </div>
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Create Orders</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                 <a class="dropdown-item" href="{{ URL::to('orders/createorderwithdetails') }}">Create Export Order</a>
+                                 <a class="dropdown-item" href="{{ URL::to('orders/createorderwithdetailsb') }}">Create Import Order</a>
+                                 </div>
+                        
+                          
                           <li class="nav-item">
                             <a class="nav-link text-white" href="{{ URL::to('monthlypay/') }}">Monthly Payment Orders</a>
                           </li>
 
                           <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ URL::to('/live_search') }}">check Tracks shipment</a>
+                            <a class="nav-link text-white" href="{{ URL::to('/live_search') }}">Track Shipment</a>
                           </li>
-
+                      
 
                     </ul>
-
+                   
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -116,15 +122,16 @@
                                     <a href="/profile/{{ Auth::user()->id }}/edit" class="dropdown-item">
                                         {{ __('Edit Profile ') }}    
                                     </a> 
-
+                                  
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
+                             
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
+
                                     </form>
                                 </div>
                             </li>

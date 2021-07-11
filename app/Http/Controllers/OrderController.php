@@ -14,6 +14,7 @@ use Input;
 use Session;
 use Redirect;
 use App\OrderDetail;
+use App\Trackshipment;
 use App\Booking;
 use App\User;
 
@@ -35,6 +36,13 @@ class OrderController extends Controller
         return View::make('orders.index')->with('orders', $orders);
     }
 
+    //for import orders
+    public function view()
+    {
+        $orders = Order::Where('ordertype','Copy Order')->orderBy('orderid','desc')->paginate(15);
+
+        return View::make('orders.orderindex')->with('orders', $orders);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -182,17 +190,80 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+
+     //for import orders
+    public function edit(Order $order)
+    {   
+        
+        return View::make('orders.editorder')->with('order',$order);
+    }
+    public function changestatus(request $request, Order $order)
     {
-        //
-        // Retrieve the order
-        $order = Order::find($id);
+        $data = request()->validate([
 
-        // show the edit form and pass the order
- //       return view('orders.edit', compact('order'));
- return View::make('orders.edit')->with('order', $order);   
-}
+            'status' => ['required', 'string', 'max:255']
+            
+        ]);
 
+       
+
+
+        $order->orderstatus = $request['status'];
+        
+        $order->save();
+
+
+        if( $request['status'] == 'Complete')
+        {
+            $data = 
+            [
+            'orderid'=>$order->orderid,
+            'custname'=>$order->custname
+            ];
+
+            $to =[ 
+                
+             'email' =>  user::find($order->custid)->email,
+            'name' =>$order->custname
+            ];
+
+//send email
+        Mail::send('emails.post', $data, function($message)use ($to) {
+    
+         $message->to($to['email'], $to['name'])->subject('Order Complete');
+        });
+
+        }
+
+//Delivered
+        if( $request['status'] == 'Delivered')
+        {
+            $data = 
+            [
+            'orderid'=>$order->orderid,
+            'recename'=>$order->recename
+            ];
+
+            $to =[ 
+                
+             'email' =>  Order::find($order->orderid)->receEmail,
+            'name' =>$order->recename
+            ];
+
+//send email
+        Mail::send('emails.delivered', $data, function($message)use ($to) {
+    
+         $message->to($to['email'], $to['name'])->subject('Order Delivered');
+        });
+
+        }
+
+        
+
+
+
+        return back()->with('message', 'Order status is Updated!');
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -345,10 +416,19 @@ class OrderController extends Controller
 
                     $order->orderdetails()->save($orderdetail);
             //$order->whereId($id)->update($input);
-
-
+                }
+            if($request->status != null || $request->status != ""){
+                Trackshipment::create([
+                    'orderid' => $order->orderid,
+                    'status' => $request->status,
+                    'location' => $request->location,
+                   
+            
+            
+                ]);
+             
             // Redirect
-            return redirect('/staff/orderindex')->with('success','Successfully updated order detail!');
+            return redirect('/orders/orderindex')->with('success','Successfully updated order detail!');
         }
     }
 }
@@ -377,7 +457,11 @@ class OrderController extends Controller
         return View::make('orders.createorderwithdetails');
     }
 
-
+    public function createorderwithdetailsb()
+    {
+        // Redirect the user back to the create order with details view
+        return View::make('orders.createorderwithdetailsb');
+    }
 
 
     public function storewithdetails(Request $request)
@@ -495,7 +579,8 @@ class OrderController extends Controller
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
             $order->createddate = Carbon::now();
-
+            $order->acceptanceTime = Carbon::now();
+            $order->ordertype =  'Normal Order';
             $order->save();
 
             if($request->location ?? $request->bookingtime !== null){
@@ -505,7 +590,14 @@ class OrderController extends Controller
             $order->booking()->save($booking);
             }
 
-            
+            Trackshipment::create([
+                'orderid' => $order->orderid,
+                'status' => "Pending",
+                'location' => "Created Shipment Order",
+               
+        
+        
+            ]);
 
             // Insert order item detail based on the inserted order
             $itemHamoCodes = $request->input('itemHamoCode', []);
@@ -561,15 +653,221 @@ class OrderController extends Controller
         return View::make('orders.show')->with('order', $order);
     }
 
-    
     public function viewOrderCust()
     {
-        $orders = Order::Where('custid',Auth::user()->id)->orderBy('orderid','desc')->paginate(15);
+        $orders = Order::Where('custid', Auth::user()->id)->orderBy('orderid', 'desc')->paginate(15);
 
-        return view::make('orders.customerView',compact('orders'));
+        return view::make('orders.customerView', compact('orders'));
     }
 
+//for import orders
+public function updateorder(Request $request, order $order)
+{
+    $input = $request->all();
 
+    // Create validation rules, please refer to https://laravel.com/docs/7.x/validation#available-validationrules for more details
+    $rules = array(
+  
+       //customer   
+       'custid' => 'required',
+       'custname' => ['required', 'string', 'max:255'],
+       'custpostcode' => ['required', 'max:4'],
+       'custaddress' => ['required', 'max:255'],
+      
+      //Receiver
+       'receCompanyname' =>  ['required', 'max:255'],
+       'recename' => ['required', 'string', 'max:255'],
+       'receEmail' => ['required', 'string', 'max:255'],
+       'recephone' =>  ['required', 'max:255'],
+       'recepostcode' => ['required', 'max:4'],
+       'receaddress' => ['required', 'max:255'],
+       
+       //payment
+        'paymemt' => 'required',
+        'totalweight' => 'required|numeric',
+        'totalcost' => 'required|numeric',
+       'totalamount' => 'required|numeric',
+
+      //shipment 
+       'shiptype' => 'required',
+       'shipcountries' => 'required',
+       'paymentstatus' => 'required',
+
+
+       //shipment details
+     
+//           'descs' => 'required',
+//           '$itemQtys'=>'required',
+//           'costs'      =>'required',
+//            'prices'     =>'required',
+//           'weights'     =>'required',
+     
+      );
+
+      $messages = [
+          //customer   
+          'custid.required' => 'Please input the Customer ID',
+          'custname.required' => 'Please input the Customer Name',
+          'custpostcode.required'  => 'Please input the Customer Post Code',
+          'custaddress.required' => 'Please input the Customer Address',
+          
+              
+           //Receiver
+          'receCompanyname.required' => 'Please input the Receiver Company Name',
+            'recename.required' => 'Please input the Receiver Name',
+            'receEmail.required' => 'Please input the Receiver Email',
+            'recephone.required' => 'Please input the Receiver Phone',
+            'recepostcode.required' => 'Please input the Receiver Post Code',
+            'receaddress.required' => 'Please input the Receiver Address',
+
+         //shipment 
+            'paymemt.required' =>  'Please select the Paymemt Method',
+            'totalweight.numeric' =>  'Please input Total Weight',
+            'totalcost.numeric' =>  'Please input the Total Cost',
+
+
+             //shipment details
+        
+        //  'descs.required'  =>  'Please input the full description',
+      //    '$itemQtys.required' =>'Please input the No of Qty',
+     //     'costs.required'      =>'Please input the Unit cost',
+   //       'prices.required'     =>'Please input the Unit price',
+  //        'weights.required'    =>'Please input the Unit weigth',
+       
+      ];
+    
+
+    $validator = Validator::make($input, $rules, $messages );
+    // Perform insert order action when validation pass or return to the index page if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator);
+    } else {
+        // Create a Order instance and configure the values before insert action
+       
+        $order->custid = $request->custid;
+        $order->custarea = $request->custarea;
+        $order->receid = $request->receid;
+        $order->recearea = $request->recearea;
+        $order->receCompanyname = $request->receCompanyname;
+        $order->recename = $request->recename;
+        $order->receEmail = $request->receEmail;
+        $order->recephone = $request->recephone;
+        $order->recepostcode = $request->recepostcode;
+        $order->receaddress = $request->receaddress;
+        $order->custname = $request->custname;
+        $order->custphone = $request->custphone;
+        $order->custpostcode = $request->custpostcode;
+        $order->custaddress = $request->custaddress;
+        $order->tax = $request->tax;
+        $order->paymemt =  $request->paymemt;
+        $order->cardtype =  $request->cardtype;
+        $order->vaDate = $request->vaDate;
+        $order->chequednum = $request->chequednum;
+        $order->shiptype = $request->shiptype;
+        $order->shipcountries = $request->shipcountries;
+        $order->shipfee = $request->shipfee;
+
+        $order->totalweight = $request->totalweight;
+        $order->cardnum =  $request->cardnum;
+        $order->totalqty =  $request->totalqty;
+        $order->totalcost =  $request->totalcost;
+        $order->totalamount =   $request->totalamount;
+        $order->paymentstatus =   $request->paymentstatus;
+        $order->remark =   $request->remark;
+        $order->save();
+
+        // Insert order item detail based on the inserted order
+        $itemHamoCodes = $request->input('itemHamoCode', []);
+        $descs = $request->input('desc', []);
+        $itemQtys  = $request->input('itemQty', []);
+        $costs = $request->input('cost', []);
+        $linecosts = $request->input('linecost', []);
+        $prices = $request->input('price', []);
+        $lineprices = $request->input('lineprice', []);
+        $weights = $request->input('weight', []);
+        $lineweights = $request->input('lineweight', []);
+
+        for ($item = 0; $item < count($itemHamoCodes); $item++) {
+           $orderdetail = $order->orderdetails->first();
+            if ($itemHamoCodes[$item] != '') {
+                $orderdetail->itemHamoCode = $itemHamoCodes[$item];
+                $orderdetail->desc = $descs[$item];
+                $orderdetail->itemQty = $itemQtys[$item];
+                $orderdetail->cost = $costs[$item];
+                $orderdetail->price = $prices[$item];
+                $orderdetail->weight = $weights[$item];
+                $orderdetail->linecost = $linecosts[$item];
+                $orderdetail->lineprice = $lineprices[$item];
+                $orderdetail->lineweight = $lineweights[$item];
+
+                
+
+
+                $order->orderdetails()->save($orderdetail);
+            }
+        }
+    }
+        
+    if($request->status != null || $request->status != ""){
+        Trackshipment::create([
+            'orderid' => $order->orderid,
+            'status' => $request->status,
+            'location' => $request->location,
+           
+    
+    
+        ]);
+     
+        
+        if( $request['status'] == 'Complete')
+        {   
+            $data = 
+            [
+            'orderid'=>$order->orderid,
+            'custname'=>$order->custname
+            ];
+
+            $to =[ 
+            
+             'email' =>  user::find($order->custid)->email,
+            'name' =>$order->custname
+            ];
+
+//send email
+            Mail::send('emails.post', $data, function($message)use ($to) {
+        
+            $message->to($to['email'], $to['name'])->subject('Order Complete');
+            });
+
+        }
+
+//Delivered
+        if( $request['status'] == 'Delivered')
+        {
+                $data = 
+                [
+                'orderid'=>$order->orderid,
+                'recename'=>$order->recename
+                ];
+
+                $to =[ 
+                    
+                'email' =>  Order::find($order->orderid)->receEmail,
+                'name' =>$order->recename
+                ];
+        
+//send email
+        Mail::send('emails.delivered', $data, function($message)use ($to) {
+    
+        $message->to($to['email'], $to['name'])->subject('Order Delivered');
+        });
+
+        }
+    }   
+    return redirect('/orders/orderindex')->with('message', 'Order is Updated!');  
+}
+
+    
     public function updateorderb(Request $request,$id)
     {
         //
@@ -654,7 +952,12 @@ class OrderController extends Controller
           
 
             // Create a Order instance and configure the values before insert action
-            for($i = 0 ; $i <=  $request->input("copy");$i++){
+           $copy = $request->input("copy");
+            if($copy == 1 or $copy == 0 ){
+                $copy = 0;
+            }
+         
+            for($i = 0 ; $i <= $copy;$i++){
      
             $order = new Order;
             $order->custid = $request->custid;
@@ -688,7 +991,7 @@ class OrderController extends Controller
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
             $order->createddate = Carbon::now();
-
+            $order->ordertype =  'Copy Order';
             $order->save();
 
             if($request->location ?? $request->bookingtime !== null){
@@ -697,7 +1000,14 @@ class OrderController extends Controller
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
             }
-
+            Trackshipment::create([
+                'orderid' => $order->orderid,
+                'status' => "Pending",
+                'location' => "Created Shipment Order",
+               
+        
+        
+            ]);
 
        
          
@@ -740,7 +1050,7 @@ class OrderController extends Controller
     }
 
             // Redirect
-            return redirect('/orders/viewAll')->with('success','Successfully updated order detail!');
+            return redirect('/orders/orderindex')->with('success','Copy Successfully!');
         }
 
 

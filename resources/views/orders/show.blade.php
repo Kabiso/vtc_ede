@@ -2,11 +2,7 @@
 
 @section('content')
 
-<link
-rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+
 
 
 <style>
@@ -20,16 +16,14 @@ display: none;
 
 </style>
 
-
-
-
-
-
-
   @if(session('success'))
         <div class="alert alert-success">
           {{ session('success') }}
-        </div> 
+        </div>
+  @elseif(session('message')) 
+  <div class="alert alert-success mb-2">
+    {{ session()->get('message') }}
+   </div>
         @endif
         @if (count($errors) > 0)
       <div class="alert alert-danger">
@@ -41,11 +35,12 @@ display: none;
         </ul>
       </div>
       @endif
+     
       <div class="container col-md-10">
-<h1>Showing Shippment Order Number:                       {{ $order->orderid }}</h1>
+<h1>Showing Shippment Order Number: {{ $order->orderid }}</h1>
 
 <div class="card">
-   <div class="card-header text-white cloginbar">Customer Information</div>
+   <div class="card-header text-white cloginbar">Sender  Information</div>
    
   
    <div class="row mt-3 ">
@@ -53,24 +48,24 @@ display: none;
          <div class="col-4"> {{ $order->orderid }}</div>
       </div>
       <div class="row mt-3">
-              <div class="col-4 text-right">Customer Name:</div>
+              <div class="col-4 text-right">Sender  Name:</div>
          <div class="col-4">{{ $order->custname }}</div>
        </div>
        <div class="row mt-3">
-         <div class="col-4 text-right">Customer Phone / Fax Number:</div>
+         <div class="col-4 text-right">Sender  Phone / Fax Number:</div>
          <div class="col-4">{{  $order->custphone  }}</div>
        </div>
 
        <div class="row mt-3">
-         <div class="col-4 text-right">Customer Post Code:</div>
+         <div class="col-4 text-right">Sender  Post Code:</div>
          <div class="col-4">{{  $order->custpostcode   }}</div>
        </div>
        <div class="row mt-3">
-         <div class="col-4 text-right">Customer Address:</div>
+         <div class="col-4 text-right">Sender  Address:</div>
          <div class="col-4">{{  $order->custaddress   }}</div>
        </div>
        <div class="row mt-3">
-         <div class="col-4 text-right">Customer Country:</div>
+         <div class="col-4 text-right">Sender  Country:</div>
          <div class="col-4">{{  $order->custarea   }}</div>
        </div>
 
@@ -202,13 +197,30 @@ display: none;
 <!--<a href="{{ url('/showairwaybill/' . $order->orderid) }}" class="btn btn-xs btn-info pull-right">Edit</a>-->
 <!--<button type="button" onclick="window.location='{{ url("orders/airwaybill/".$order->orderid) }}'">Button</button>-->
 
-<div class="row my-4">
-   <div class="col-4"></div>
-   <a class="p-3 mb-2 bg-danger text-white text-center" styple="height:10px;width:10px" href="{{URL::to('airwaybill',$order)  }}">Print Airway Bill</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<div class="row my-4 justify-content-center">
+   <div class="col-2 mt-3 text-center">
+   <a class="p-3 mt-2 bg-danger text-white text-center"  href="{{URL::to('airwaybill',$order)  }}">Print Airway Bill</a>
    <!--   <a class="p-3 mb-2 bg-primary text-white text-center" styple="background-color: blue; "href="{{URL::to('commercialinvoice',$order)}}">Print Commercial Invoice</a>
--->   </div>
-    <div class="row my-4">
-    <div class="col-4"></div>
+-->   
+   </div>
+   <div class="col-2 mt-3 text-center">
+  @if ($order->paymentstatus == 'Paid')
+
+  <a class="p-3  bg-primary text-white text-center"  href="{{URL::to('invoicecust',$order)}}" >Print Invoice</a>
+  
+      
+  @elseif($order->paymentstatus == 'Pay Online')
+  <a class="p-3 mb-2 " id="paypal-payment-button" href=# ></a>  
+  <div class="row mt-3 " style="display: hidden;">
+    <form action="/settlepayment/{{$order->orderid}}/success" method="POST" id="payform">
+        @csrf
+    </form>
+  </div>    
+  @endif
+</div>
+</div>
+    <div class="row my-4 justify-content-center">
+    
       <form class="upload" method="post" action="{{url('preview-image-upload')}}" enctype="multipart/form-data"  >
         @csrf
       
@@ -226,26 +238,50 @@ display: none;
           <button type="submit" class="p-3 mb-2 bg-primary text-white text-center" style="margin-top:10px">Please Upload the Commercial Invoice</button>  
           @foreach ($order->Photo as $ph)
 
-                <a data-fancybox="gallery" style="float:right;" href={{ asset("/profile_images/$ph->photo_name") }}><img  width=150 src= {{ asset("/profile_images/$ph->photo_name") }} class="pic"></a>
+          <div class="row my-4">
+        
+        Download Invoice<a  style="float:right;" download name href={{ asset("/profile_images/$ph->photo_name") }}><img  width=150  name = 'filename'  class="pic">{{$ph->photo_name}}</a>
+        </div>
 
           @endforeach
+        </form>
           </div>
           </div>
    </div>
 
           </div>
         </div>
-        
-  </form>
-  </div>
-  </div>
-   </div>
 
-</body>
 
-  </div>
-</body>
-</html>
+        <script src="https://www.paypal.com/sdk/js?client-id=AR7Vf-XUMn_oyA8oi5gBDnhDs_KCdG0p9MeqvmLlM4-7QJhT8eaKSsHmiqmFJruXv21NboNhicAvehET&currency=HKD&disable-funding=credit"></script>
+        <script>
+        paypal.Buttons({
+            style: {
+                shape: 'pill'
+            },
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: {{$order->shipfee}}
+                        }
+                    }]
+                });
+            },
+    
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                   // console.log(details)
+                    //indow.location.replace("/settlepayment/{{$order->orderid}}/success")
+                    $('#payform').submit();
+                })
+            },
+    
+            onCancel: function(data) {
+                return;
+            }
+        }).render('#paypal-payment-button');
+        </script>
 
 <script>
   function loadPreview(input, id,oid) {
@@ -264,6 +300,7 @@ display: none;
         reader.readAsDataURL(input.files[0]);
     }
  }
+
 </script>
 
 </div>

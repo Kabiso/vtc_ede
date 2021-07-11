@@ -16,8 +16,10 @@ class LiveSearch extends Controller
 
     function action(Request $request)
     {
+      
      if($request->ajax())
      {
+      
       $output = '';
       $checkid='';
       $orderid='';

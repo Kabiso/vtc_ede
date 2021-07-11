@@ -94,6 +94,13 @@ class CreateOrdersTable extends Migration
 
 
             $table->foreign('custid')->references('id')->on('customer');
+            $table->string('checkcom',5)->nullable();;
+            $table->string('trackshipment',255)->nullable();;
+            $table->string('ordertype',20)->nullable();;
+
+
+
+
             
          });
     }
