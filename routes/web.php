@@ -66,7 +66,7 @@ Route::get('monthlyinvoice/{month}','monthlypayController@invoice')->name('month
 Route::group(['middleware' => 'auth:web,staff'], function () {
 
     //order
-    Route::get('/show_vehicle', 'VehicleController@showVehicle');
+   
     Route::get('orders/createorderwithdetails', 'OrderController@createorderwithdetails')->name('orders.createorderwithdetails');
     Route::post('orders/storewithdetails', 'OrderController@storewithdetails')->name('orders.storewithdetails');
     
@@ -78,7 +78,7 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
    Route::get('orderdetails/calfee','OrderDetailController@calfee')->name('orders.calfee');
     Route::resource('orders', 'OrderController');
     Route::resource('orderdetails', 'OrderDetailController');
-    Route::post('/posts/confirmation', 'PostController@confirmation');
+   
 
     
 

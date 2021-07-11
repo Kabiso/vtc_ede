@@ -243,7 +243,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthely Pay'){
+           }else if(opt == 'Monthly Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -301,7 +301,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthely Pay'){
+           }else if(opt == 'Monthly Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -356,7 +356,7 @@ $(function(){
             $('#paystatust select').val(pay);
   
                   
-           }else if(opt == 'Monthely Pay'){
+           }else if(opt == 'Monthly Pay'){
             var pay ='Waiting to Pay';
             $('#creditcard').hide();
             $('#cheque').hide();
@@ -586,7 +586,7 @@ $(function(){
 
     <div class="col-4 text-right">{{ Form::label('paymemt', 'Payment Mothed') }}</div>
     
-    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'PayPal' => 'PayPal','Credit Card' => 'Credit Card', 'Monthely Pay' => 'Monthely Pay'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
+    <div class="col-4" id = "payment"> {!! Form::select('paymemt', array('Wait to Calculate the Weight of the goods' => 'Wait to Calculate the Weight of the goods', 'Cash' => 'Cash', 'Cheque' => 'Cheque', 'PayPal' => 'PayPal','Credit Card' => 'Credit Card', 'Monthly Pay' => 'Monthly Pay'), 'Wait to Calculate the Weight', array('class' => 'form-control')); !!}</div>
  
      
 </div>
