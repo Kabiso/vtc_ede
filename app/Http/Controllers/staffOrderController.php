@@ -129,6 +129,7 @@ class staffOrderController extends Controller
 
     public function updateorder(Request $request, order $order)
     {
+        
         $input = $request->all();
 
         // Create validation rules, please refer to https://laravel.com/docs/7.x/validation#available-validationrules for more details
@@ -255,22 +256,19 @@ class staffOrderController extends Controller
             $lineweights = $request->input('lineweight', []);
 
             for ($item = 0; $item < count($itemHamoCodes); $item++) {
-               $orderdetail = $order->orderdetails->first();
+                $orderdetail = $order->orderdetails;
                 if ($itemHamoCodes[$item] != '') {
-                    $orderdetail->itemHamoCode = $itemHamoCodes[$item];
-                    $orderdetail->desc = $descs[$item];
-                    $orderdetail->itemQty = $itemQtys[$item];
-                    $orderdetail->cost = $costs[$item];
-                    $orderdetail->price = $prices[$item];
-                    $orderdetail->weight = $weights[$item];
-                    $orderdetail->linecost = $linecosts[$item];
-                    $orderdetail->lineprice = $lineprices[$item];
-                    $orderdetail->lineweight = $lineweights[$item];
-
                     
-
-
-                    $order->orderdetails()->save($orderdetail);
+                    $orderdetail[$item]->itemHamoCode = $itemHamoCodes[$item];
+                    $orderdetail[$item]->desc = $descs[$item];
+                    $orderdetail[$item]->itemQty = $itemQtys[$item];
+                    $orderdetail[$item]->cost = $costs[$item];
+                    $orderdetail[$item]->price = $prices[$item];
+                    $orderdetail[$item]->weight = $weights[$item];
+                    $orderdetail[$item]->linecost = $linecosts[$item];
+                    $orderdetail[$item]->lineprice = $lineprices[$item];
+                    $orderdetail[$item]->lineweight = $lineweights[$item];
+                    $order->orderdetails()->save($orderdetail[$item]);
                 }
             }
         }

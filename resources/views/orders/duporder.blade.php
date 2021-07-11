@@ -149,6 +149,8 @@ function calculateGrandTotal() {
     });
     $("#grandtotal").text(grandTotal.toFixed(2));
     $("#tweight .form-control").val(grandTotal.toFixed(2));
+    $("#totalweight").trigger('change');
+
     
 }
 

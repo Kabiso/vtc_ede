@@ -572,18 +572,20 @@ $(function(){
     </thead>
 
     <tbody>
+        @foreach($order->orderdetails as $od)
         <tr>
-            <td><input type="text" size="10" name="itemHamoCode[]" value="{{$order->orderdetails->first()->itemHamoCode}}" /></td>
-            <td><input type="text" size="13" name="desc[]" value="{{$order->orderdetails->first()->desc}}" /></td>
-            <td><input type="number" size="3" step="1" name="itemQty[]" value="{{$order->orderdetails->first()->itemQty}}" /></td>
-            <td><input type="number" size="5" name="weight[]" value="{{$order->orderdetails->first()->weight}}"/></td>
-            <td><input type="number" size="3" name="cost[]" value="{{$order->orderdetails->first()->cost}}" /></td>
-            <td><input type="number" size="5" name="price[]" value="{{$order->orderdetails->first()->price}}" /></td>
-            <td><input type="text" size="5" name="lineweight[]" readonly="readonly"  value="{{$order->orderdetails->first()->lineweight}}"/></td>
-            <td><input type="text" size="5" name="lineprice[]" readonly="readonly"  value="{{$order->orderdetails->first()->lineprice}}"/></td>
-            <td><input type="text" size="5" name="linecost[]" readonly="readonly"  value="{{$order->orderdetails->first()->linecost}}"/></td>
+            <td><input type="text" size="10" name="itemHamoCode[]" value="{{$od->itemHamoCode}}" /></td>
+            <td><input type="text" size="13" name="desc[]" value="{{$od->desc}}" /></td>
+            <td><input type="number" size="3" step="1" name="itemQty[]" value="{{$od->itemQty}}" /></td>
+            <td><input type="number" size="5" name="weight[]" value="{{$od->weight}}"/></td>
+            <td><input type="number" size="3" name="cost[]" value="{{$od->cost}}" /></td>
+            <td><input type="number" size="5" name="price[]" value="{{$od->price}}" /></td>
+            <td><input type="text" size="5" name="lineweight[]" readonly="readonly"  value="{{$od->lineweight}}"/></td>
+            <td><input type="text" size="5" name="lineprice[]" readonly="readonly"  value="{{$od->lineprice}}"/></td>
+            <td><input type="text" size="5" name="linecost[]" readonly="readonly"  value="{{$od->linecost}}"/></td>
             <td><a class="deleteRow"> x </a></td>
         </tr>
+        @endforeach
     </tbody>
 
     <tfoot >
