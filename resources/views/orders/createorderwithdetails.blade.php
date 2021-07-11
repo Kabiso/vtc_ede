@@ -392,7 +392,7 @@ $(function(){
 <h1>Staff Page</h1>
 <div class="container col-md-10">
 @endif
-<h1>Create a Shipment Order</h1>
+<h1>Create a Export Shipment Order</h1>
 
 {!! Form::open(['action' =>'OrderController@storewithdetails', 'method' => 'POST','files'=>true])!!}
 @csrf
@@ -401,7 +401,7 @@ $(function(){
 
 
 <div class="row mt-3 ">    
-    <div class="col-4 text-right ">{{ Form::label('custid', 'Customor Account No.') }}</div>
+    <div class="col-4 text-right ">{{ Form::label('custid', 'Sender Account No.') }}</div>
     @if((Auth::guard('web')->check()))
     <div class="col-4">{{ Form::text('custid', Auth::user()->id, array('class' => 'form-control','readonly')) }}</div>
     @else
@@ -422,7 +422,7 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custname', 'Customer Name') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custname', 'Sender Name') }}</div>
     <div class="col-4" >{{ Form::text('custname', Auth::user()->custname, array('class' => 'form-control')) }}</div>
 
 </div>
@@ -432,28 +432,28 @@ $(function(){
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custphone', 'Customer Phone Number') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custphone', 'Sender Phone Number') }}</div>
     <div class="col-4" >{{ Form::text('custphone',  Auth::user()->contactNo, array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Customer Post Code') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custpostcode', 'Sender Post Code') }}</div>
     <div class="col-4">{{ Form::text('custpostcode', '0000', array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3">
 
-    <div class="col-4 text-right">{{ Form::label('cutarea', 'Customer Country') }}</div>
+    <div class="col-4 text-right">{{ Form::label('cutarea', 'Sender Country') }}</div>
     <div class="col-4">{{ Form::select('custarea', array('AUSTRALIA' => 'AUSTRALIA', 'JAPAN' => 'JAPAN','CHINA' => 'CHINA', 'HONG KONG' => 'HONG KONG'), 'HONG KONG', array('class' => 'form-control')) }}</div>
 
 </div>
 
 <div class="row mt-3 mb-3">
 
-    <div class="col-4 text-right">{{ Form::label('custaddress', 'Customer Address') }}</div>
+    <div class="col-4 text-right">{{ Form::label('custaddress', 'Sender Address') }}</div>
     <div class="col-4" >{{ Form::text('custaddress', Auth::user()->custAddress, array('class' => 'form-control')) }}</div>
 
 </div>
