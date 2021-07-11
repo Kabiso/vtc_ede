@@ -59,9 +59,8 @@
                                 <a class="dropdown-item" href="{{ URL::to('/staff/viewbooking') }}">View All Pick Up Booing</a>
 
 
-                            @can(['normalStaff'])
+                            @can('normalStaff')
                               <a class="dropdown-item " href="{{ URL::to('orders/createorderwithdetails') }}">Create New Order </a>
-
                             @endcan
 
                             </div>
@@ -83,7 +82,7 @@
 
                          
                       
-                          @can(['acct'])
+                          @can('acct')
                           <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
