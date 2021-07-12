@@ -65,7 +65,14 @@
 
                             </div>
                           </li>
-
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shippment Control</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item " href="{{ URL::to('staff/charges/create') }}">Create Fee</a>
+                              <!-- Dropdown menu item for create new order with details -->
+                                <a class="dropdown-item" href="{{ URL::to('staff/charges') }}">View All Shipment Fee</a>
+                            </div>
+                          </li>
                           <li class="nav-item">
                             <a class="nav-link text-white" href="{{ URL::to('/live_search') }}">Track Shipment</a>
                           </li>

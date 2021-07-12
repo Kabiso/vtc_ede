@@ -139,10 +139,17 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
     Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
     Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
-    Route::get('staff/staffacct/search', 'staffAcctController@getstaff')->name('staffacct.earch');
+    
       
     
-
+    //Fee control
+    Route::get('staff/charges', 'chargesController@index')->name('charges.index');
+    Route::get('staff/charges/create', 'chargesController@create')->name('charges.create');
+    Route::post('staff/charges/store', 'chargesController@store')->name('charges.store');
+    Route::get('staff/charges/{charges}/edit','chargesController@edit')->name('charges.edit');
+    Route::patch('staff/charges/{charges}', 'chargesController@update')->name('charges.update');
+    Route::delete('staff/charges/{charges}', 'chargesController@destroy')->name('charges.delete');
+   
 
     //customer account management  Staff side
     Route::view('staff/profile/create', 'profile.create')->name('profile.custStaffcreate');
