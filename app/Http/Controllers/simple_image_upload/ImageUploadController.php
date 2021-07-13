@@ -42,7 +42,7 @@ class ImageUploadController extends Controller
   $order->save();
 
         }
-        return redirect('/home')->with('success', 'Image Upload successfully');
+        return back()->with('success', 'Image Upload successfully');
       //  return View::make('orders.show')->with('order', $order);
      //   return redirect('/orders')->with('success', 'Image Upload successfully');
     }

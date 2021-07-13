@@ -38,11 +38,17 @@
                                 
                                 <td>{{$order->shipfee}}</td>
                                 <td><button class="btn btn-info text-white" onclick="window.location='/viewOrderDetail/{{$order->orderid}}'"  >View Order</button></td>
+                                @if ($order->paymentstatus == 'Paid')
+                                <td>
+                                    <button class="btn btn-secondary">Paid</button>
+                                </td>
+                                @else
                                 <td><form action="/staff/viewMonPay/{{$order->orderid }}" method="POST" onsubmit="return confirm('Payment Confirm ?')">
                                     @csrf
                                     <button type="submit" class="btn btn-success">Confirm Payment</button>
                                 </form>
                                 </td>
+                                @endif
 
                             </tr>
                             @endforeach

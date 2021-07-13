@@ -84,7 +84,7 @@ class monthlypayController extends Controller
          <td>'.$order->createddate->format("Y/m/d").'</td>
          <td>'.$order->shipfee.'</td>
          <td><a class="btn btn-info text-white" href="/viewOrderDetail/'.$order->orderid.'"  >View Order</a></td>
-         <td><a class="btn btn-success text-white" href="#" >View Order Invoice</a></td>
+         <td><a class="btn btn-success text-white" href="/invoicecust/'.$order->orderid.'" >View Order Invoice</a></td>
          </tr>
         ';
     

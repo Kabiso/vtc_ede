@@ -11,7 +11,7 @@
                     <form method="POST" action="{{ route('charges.store') }}">
                         @csrf
 
-                        <div class="form-group row">
+               <!--         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Shipment type') }}</label>
 
                             <div class="col-md-6">
@@ -19,9 +19,39 @@
 
                             
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Shipment Type') }}</label>
+
+                        <div class="col-md-6">
+                                <select class="form-control" id="name" name="name" required>
+                                    <option value="">Please choose</option>
+                                    
+                                    @foreach(App\charges::latest()->get()->unique('shiptype') as $charge)
+                                    <option vaule="{{ $charge->shiptype }}">{{ $charge->shiptype }}</option>
+                                    @endforeach  
+                                  </select>
+                             
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('Shipment Area') }}</label>
+                        <div class="col-md-6">
+                                <select class="form-control" id="gender" name="gender" required>
+                                    <option value="">Please choose</option>
+                                    
+                                    @foreach(App\charges::latest()->get()->unique('shiparea') as $charge)
+                                    <option vaule="{{ $charge->shiparea }}">{{ $charge->shiparea}}</option>
+                                    @endforeach  
+                                  </select>
+                             
+                            </div>
+                        </div>
+
+                   <!--     <div class="form-group row">
                             <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('Shipment Area') }}</label>
 
                             <div class="form-check form-check-inline pl-3">
@@ -41,7 +71,7 @@
                                 <label class="form-check-label" for="female">CHINA</label>
                               </div>
                               
-                        </div>
+                        </div>-->
 
 
 
@@ -66,21 +96,22 @@
 
                         
 
-                 <!--       <div class="form-group row">
+               <!--        <div class="form-group row">
                             <label for="jobtitle" class="col-md-4 col-form-label text-md-right">{{ __('Shipment Type') }}</label>
 
                             <div class="col-md-6">
                                 <select class="form-control" id="jobtitle" name="jobtitle" required>
                                     <option value="">Please choose</option>
-                                    @foreach(App\charges::groupby('shiptype') as $charge)
+                                    
+                                    @foreach(App\charges::latest()->get()->unique('shiptype') as $charge)
                                     <option vaule="{{ $charge->shiptype }}">{{ $charge->shiptype }}</option>
                                     @endforeach  
                                   </select>
                              
                             </div>
-                        </div>
+                        </div>-->
                         
--->
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
