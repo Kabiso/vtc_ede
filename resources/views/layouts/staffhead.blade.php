@@ -71,6 +71,7 @@
                               <a class="dropdown-item " href="{{ URL::to('staff/charges/create') }}">Create Fee</a>
                               <!-- Dropdown menu item for create new order with details -->
                                 <a class="dropdown-item" href="{{ URL::to('staff/charges') }}">View All Shipment Fee</a>
+                                <a class="dropdown-item" href="{{ URL::to('staff/syslog') }}">View System Log</a>
                             </div>
                           </li>
                           <li class="nav-item">

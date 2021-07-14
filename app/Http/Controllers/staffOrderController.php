@@ -18,7 +18,7 @@ use App\User;
 use App\Trackshipment;
 use Illuminate\Contracts\Validation\Validator as ValidationValidator;
 use Illuminate\Support\Facades\Mail;
-
+use App\syslog;
 
 class staffOrderController extends Controller
 {
@@ -123,7 +123,30 @@ class staffOrderController extends Controller
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $booking->save();
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
         
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
+        
+                    
+                     
+                   
+        
+                    syslog::create([
+                        'userid' =>   $user_id,
+                        'username' => $user_name ,
+                        'oid' => $booking->bookingid,
+                        'action' => "Booking updated,staffOrderController.updatebookingr",
+                        'actioncode' => '3',
+                       
+                
+                
+                    ]);
         return redirect('staff/viewbooking')->with('message', 'Pickup Booking is Updated!');  
     }
 
@@ -282,7 +305,30 @@ class staffOrderController extends Controller
         
         
             ]);
-         
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
+        
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
+        
+                    
+                     
+                   
+        
+                    syslog::create([
+                        'userid' =>   $user_id,
+                        'username' => $user_name ,
+                        'oid' => $order->orderid,
+                        'action' => "Order updated,$request->status, OrderController.updateorder",
+                        'actioncode' => '3',
+                       
+                
+                
+                    ]);
             
             if( $request['status'] == 'Complete')
             {   

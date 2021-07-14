@@ -149,6 +149,9 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::get('staff/charges/{charges}/edit','chargesController@edit')->name('charges.edit');
     Route::patch('staff/charges/{charges}', 'chargesController@update')->name('charges.update');
     Route::delete('staff/charges/{charges}', 'chargesController@destroy')->name('charges.delete');
+
+     //SYSTEM LOG
+    Route::get('staff/syslog', 'syslogController@index')->name('charges.index');
    
 
     //customer account management  Staff side

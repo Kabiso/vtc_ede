@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
 use Redirect;
 
-class chargesController extends Controller
+class syslogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,9 +21,9 @@ class chargesController extends Controller
      */
     public function index()
     {
-        $charges =charges::orderBy('shiptype','asc')->orderBy('shiparea','asc')->orderBy('shipweight','asc')->paginate(15);
+        $syslog =syslog::where('syslogid', '!=' , '1')->paginate(15);
         //    $charges = charges::where('chargeid', '!=' , '1')->paginate(15);
-            return view('staff.viewcharges')->with('charges',$charges);
+            return view('staff.viewsyslog')->with('syslog',$syslog);
   
         
         

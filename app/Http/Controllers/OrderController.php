@@ -15,6 +15,7 @@ use Session;
 use Redirect;
 use App\OrderDetail;
 use App\Trackshipment;
+use App\syslog;
 use App\Booking;
 use App\User;
 
@@ -38,8 +39,12 @@ class OrderController extends Controller
 
     //for import orders
     public function view()
+
     {
-        $orders = Order::Where('ordertype','Copy Order')->orderBy('orderid','desc')->paginate(15);
+        $user_id = Auth::user()->id;
+        $orders = Order::Where('ordertype','Copy Order')
+                    ->where('custid',$user_id)
+                  ->orderBy('orderid','desc')->paginate(15);
 
         return View::make('orders.orderindex')->with('orders', $orders);
     }
@@ -426,7 +431,26 @@ class OrderController extends Controller
             
             
                 ]);
-             
+
+                //system log
+                $user_id = Auth::user()->id;
+                $user_name1 = Auth::user()->custname;
+                $user_name2 = Auth::user()->stfName;
+                if(isset( $user_name1)){
+            
+                   $user_name = $user_name1;
+                }else{
+                  $user_name =$user_name2;
+                }
+                  
+                        syslog::create([
+                            'userid' =>   $user_id,
+                            'username' => $user_name ,
+                            'oid' => $order->orderid,
+                            'action' => "Order Updated,$request->status, OrderController.update",
+                            'actioncode' => '3',
+                           ]);
+                     //system log
             // Redirect
             return redirect('/orders/orderindex')->with('success','Successfully updated order detail!');
         }
@@ -447,6 +471,14 @@ class OrderController extends Controller
 
         // Delete the retrieved order
         $order->delete();
+
+
+       
+           
+    
+    
+  
+
 
         return redirect('orders')->with('success', 'Successfully deleted order!');
     }
@@ -546,6 +578,16 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return Redirect::to('orders/createorderwithdetails')->withErrors($validator)->withInput();
         } else {
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
+        
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
+        
             // Create a Order instance and configure the values before insert action
             $order = new Order;
             $order->custid = $request->custid;
@@ -588,17 +630,58 @@ class OrderController extends Controller
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
-            }
+            syslog::create([
+                'userid' =>   $user_id,
+                'username' => $user_name ,
+                'oid' => $booking->bookingid,
+                'action' => ' Booking Created, OrderController.storewithdetails',
+                'actioncode' => '2',
+               
+        
+        
+            ]);
+        }
+
+      //   $user_name = Auth::user()->custname;
+
+    //     if(Auth::user()->custname =null){
+    //        $user_name =Auth::user()->stfName;
+          
+   //      }else{
+   //         $user_name =Auth::user()->custname;
+      
+//system log
+ 
+            
+             
+           
+
+       
+            
 
             Trackshipment::create([
                 'orderid' => $order->orderid,
                 'status' => "Pending",
-                'location' => "Created Shipment Order",
+                'location' => " Shipment Order Created",
                
         
         
             ]);
 
+
+              //syslog
+             
+              syslog::create([
+                'userid' =>  $user_id,
+                'username' => $user_name,
+                'oid' => $order->orderid,
+                'action' => ' Order Created, OrderController.storewithdetails',
+                'actioncode' => '1',
+               
+        
+        
+            ]);
+//system log
             // Insert order item detail based on the inserted order
             $itemHamoCodes = $request->input('itemHamoCode', []);
             $descs = $request->input('desc', []);
@@ -816,8 +899,28 @@ public function updateorder(Request $request, order $order)
     
     
         ]);
-     
-        
+
+        //system log
+        $user_id = Auth::user()->id;
+        $user_name1 = Auth::user()->custname;
+        $user_name2 = Auth::user()->stfName;
+        if(isset( $user_name1)){
+    
+           $user_name = $user_name1;
+        }else{
+          $user_name =$user_name2;
+        }
+             syslog::create([
+                    'userid' =>   $user_id,
+                    'username' => $user_name ,
+                    'oid' => $order->orderid,
+                    'action' => "Order Updated,$request->status, OrderController.updateorder",
+                    'actioncode' => '3',
+                   
+            
+            
+                ]);
+           //system log
         if( $request['status'] == 'Complete')
         {   
             $data = 
@@ -998,6 +1101,15 @@ public function updateorder(Request $request, order $order)
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
+            syslog::create([
+                'userid' =>   $user_id,
+                'username' => $user_name ,
+                'oid' => $booking->bookingid,
+                'action' => "Created Booking, OrderController.updateorderb",
+                'actioncode' => '2',
+               
+                      
+            ]);
             }
             Trackshipment::create([
                 'orderid' => $order->orderid,
@@ -1008,8 +1120,27 @@ public function updateorder(Request $request, order $order)
         
             ]);
 
-       
-         
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
+        
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
+        
+            syslog::create([
+                'userid' =>   $user_id,
+                'username' => $user_name ,
+                'oid' => $order->orderid,
+                'action' => "Created Copy Order, OrderController.updateorderb",
+                'actioncode' => '1',
+        
+            ]); 
+                     
+                   
+         //system log
             // Insert order item detail based on the inserted order
             $itemHamoCodes = $request->input('itemHamoCode', []);
             $descs = $request->input('desc', []);
