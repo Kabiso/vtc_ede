@@ -272,7 +272,7 @@ class staffOrderController extends Controller
             $order->totalamount =   $request->totalamount;
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
-
+            
             if(isset( $user_name1)){
         
                 $create_id =2;
@@ -283,7 +283,7 @@ class staffOrderController extends Controller
             $order->created_by =  $create_id;
                   }
            //end -------------------------------------------
-
+                  
             $order->acceptanceTime =   $request->acceptanceTime;
             $order->save();
    
@@ -314,6 +314,7 @@ class staffOrderController extends Controller
                     $order->orderdetails()->save($orderdetail[$item]);
                 }
             }
+               
         }
             
         if($request->status != null || $request->status != ""){

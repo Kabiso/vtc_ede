@@ -21,7 +21,7 @@ class syslogController extends Controller
      */
     public function index()
     {
-        $syslog =syslog::all()->paginate(15);
+        $syslog =syslog::where('syslogid', '!=' , '0')->paginate(15);
         //    $charges = charges::where('chargeid', '!=' , '1')->paginate(15);
             return view('staff.viewsyslog')->with('syslog',$syslog);
   
