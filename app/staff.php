@@ -24,7 +24,8 @@ class staff extends Authenticatable
         'password',
         'stfConactNo',
         'stfGender',
-        'jobtitles_id'
+        'jobtitles_id',
+        'is_deleted'
         
     ];
 
@@ -48,6 +49,11 @@ class staff extends Authenticatable
      public function jobtitles()
      {
         return $this->hasOne(jobtitles::class);      
+     }
+
+     public function Order()
+     {
+        return $this->hasMany(Order::class);      
      }
     
 }

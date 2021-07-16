@@ -44,7 +44,7 @@
                                 <td>
                                     <form action="/staff/staffacct/{{ $staff->id }}" method="POST" onsubmit="return confirm('Confirm to delete? ')">
                                         @csrf
-                                        @method('delete')
+                                        @method('patch')
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
                                 </td>

@@ -10,7 +10,7 @@ class Order extends Model
     protected $primaryKey = 'orderid'; // Define the primary key column name
     public $timestamps = false; // Disable Eloquent timestamps function
     protected $dates = ['createddate'];
-    protected $fillable = ['custid','custarea', 'receid','recearea', 'receCompanyname', 'recename','receEmail', 'recephone', 'recepostcode','remark', 'receaddress', 'custname', 'custphone', 'custpostcode','custaddress','tax','paymemt','cardtype','vaDate','totalweight','cardnum','totalcost','totalqty','totalamount','createddate','shiptype','shipfee','shipcountries','chequednum','finalizeddate','paymentstatus','acceptanceTime','checkcom','trackshipment','ordertype']; // Mass assignment white-list
+    protected $fillable = ['custid','created_by','custarea', 'receid','recearea', 'receCompanyname', 'recename','receEmail', 'recephone', 'recepostcode','remark', 'receaddress', 'custname', 'custphone', 'custpostcode','custaddress','tax','paymemt','cardtype','vaDate','totalweight','cardnum','totalcost','totalqty','totalamount','createddate','shiptype','shipfee','shipcountries','chequednum','finalizeddate','paymentstatus','acceptanceTime','checkcom','trackshipment','ordertype']; // Mass assignment white-list
     
     // Retrieve the order details of the order
 public function orderdetails()

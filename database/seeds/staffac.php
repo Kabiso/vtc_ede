@@ -22,5 +22,14 @@ class staffac extends Seeder
             'jobtitles_id' =>'1',
 
         ]);
+        DB::table('staff')->insert([
+            'stfName' => 'Online Customer',
+            'email' => 'online_customer@ede.com',
+            'password' => Hash::make('%$$^%and31'),
+            'stfConactNo' => '00000000',
+            'stfGender' => 'M',
+            'jobtitles_id' => '99',
+
+        ]);
     }
 }

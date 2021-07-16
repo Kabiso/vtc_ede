@@ -233,7 +233,15 @@ class staffOrderController extends Controller
             return back()->withErrors($validator);
         } else {
             // Create a Order instance and configure the values before insert action
-           
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
+        
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
             $order->custid = $request->custid;
             $order->custarea = $request->custarea;
             $order->receid = $request->receid;
@@ -264,6 +272,18 @@ class staffOrderController extends Controller
             $order->totalamount =   $request->totalamount;
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
+
+            if(isset( $user_name1)){
+        
+                $create_id =2;
+
+                $order->created_by =  $create_id;
+              }else{
+             $create_id =  $user_id;
+            $order->created_by =  $create_id;
+                  }
+           //end -------------------------------------------
+
             $order->acceptanceTime =   $request->acceptanceTime;
             $order->save();
    

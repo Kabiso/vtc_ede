@@ -20,7 +20,7 @@ class CreateTrackshipmentsTable extends Migration
             $table->string('location', 255)->nullable();
             $table->timestamps();
 
-            $table->foreign('orderid')->references('orderid')->on('orders');
+            
         });
     }
 

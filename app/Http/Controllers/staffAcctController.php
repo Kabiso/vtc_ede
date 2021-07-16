@@ -22,7 +22,7 @@ class staffAcctController extends Controller
     {
         if (Gate::allows('sysAdmin'))
         {
-            $staffs = staff::where('jobtitles_id', '!=' , '1')->paginate(15);
+            $staffs = staff::where('jobtitles_id', '!=' , '1')->where('jobtitles_id', '!=' , '99')->where('is_deleted', '0')->paginate(15);
             return view('staff.viewAcct')->with('staffs',$staffs);
         }else{
             return redirect('staff/')->with('alert','You are not allow to perfom such action!');
@@ -158,7 +158,8 @@ class staffAcctController extends Controller
     {
         $this->authorize('sysAdmin');
 
-        $staff->delete();
+        $staff->is_deleted = '1';
+        $staff->save();
 
         return redirect('staff/staffacct')->with('message', 'Account is Deleted!');
     }

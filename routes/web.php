@@ -87,7 +87,9 @@ Route::group(['middleware' => 'auth:web,staff'], function () {
     Route::get('/live_search/action', 'LiveSearch@action')->name('live_search.action');
 
     //Report
-    Route::get('/report', 'ReportController@index');
+     //Report
+     Route::get('/statisticalReport', 'ReportController@fourYearReport');
+     Route::get('/weeklyShipmentReport', 'ReportController@weeklyReport');
     
 
     //for print airwaybill
@@ -138,7 +140,7 @@ Route::group(['middleware' => 'auth:staff'], function ()
     Route::post('staff/staffacct/store', 'staffAcctController@store')->name('staffacct.store');
     Route::get('staff/staffacct/{staff}/edit', 'staffAcctController@edit')->name('staffacct.edit');
     Route::patch('staff/staffacct/{staff}', 'staffAcctController@update')->name('staffacct.update');
-    Route::delete('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
+    Route::patch('staff/staffacct/{staff}', 'staffAcctController@destroy')->name('staffacct.delete');
     
       
     

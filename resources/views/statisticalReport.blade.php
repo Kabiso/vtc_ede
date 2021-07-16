@@ -92,12 +92,15 @@
         chart2.draw(data2, options2);
       }
     </script>
-
-    <div class="pull-right hidden-print"><a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-white m-b-10 p-l-5" style="font-size: 30px"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i>Print / Export PDF</a></div><br>
-    <div style="text-align: center; font-size: 60px; font-style: italic"><b>Statistical Reports</b></div>
+    <!-- Print / Export PDF button -->
+    <div class="pull-right hidden-print"><a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-white m-b-10 p-l-5" style="font-size: 30px"><i class="fa fa-print t-plus-1 fa-fw fa-lg"></i>Print / Export PDF</a></div><br><br>
 
     <hr>
 
+    <div style="text-align: center; font-size: 60px; font-style: italic"><b>Statistical Reports</b></div>
+
+    <hr>
+    <!-- Display chart -->
     <a title="save this chart as PNG file by right click"><div id="shipfee_chart" style="width: 1350px; height: 750px; margin: auto; box-shadow: 0px 0px 20px grey"></div></a>
 
     <hr>

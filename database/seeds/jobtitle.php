@@ -52,5 +52,10 @@ class jobtitle extends Seeder
             'title' => 'Customer Service',
             'salary' => '8000',
         ]);
+        DB::table('jobtitles')->insert([
+            'id' => '99',
+            'title' => 'Online_Customer',
+            'salary' => '0',
+        ]);
     }
 }

@@ -22,7 +22,8 @@ class CreateOrdersTable extends Migration
             
             // Create a string column for vehicle registration number
             $table->unsignedBigInteger('custid');
-
+            $table->unsignedBigInteger('created_by');
+       
 
             // Create a string column for customer name
              $table->string('custname', 255);
@@ -94,6 +95,7 @@ class CreateOrdersTable extends Migration
 
 
             $table->foreign('custid')->references('id')->on('customer');
+            $table->foreign('created_by')->references('id')->on('staff');
             $table->string('checkcom',5)->nullable();;
             $table->string('trackshipment',255)->nullable();;
             $table->string('ordertype',20)->nullable();;

@@ -621,8 +621,19 @@ class OrderController extends Controller
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
             $order->createddate = Carbon::now();
-          
-            $order->ordertype =  'Normal Order';
+             $order->ordertype =  'Normal Order';
+
+             //start --check create user customer ?? staff 
+             if(isset( $user_name1)){
+        
+                $create_id =2;
+
+                $order->created_by =  $create_id;
+             }else{
+                $create_id =  $user_id;
+                $order->created_by =  $create_id;
+             }
+             //end -------------------------------------------
             $order->save();
 
             if($request->location ?? $request->bookingtime !== null){
@@ -630,6 +641,7 @@ class OrderController extends Controller
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
+         //start -- system log
             syslog::create([
                 'userid' =>   $user_id,
                 'username' => $user_name ,
@@ -637,11 +649,9 @@ class OrderController extends Controller
                 'action' => ' Booking Created, OrderController.storewithdetails',
                 'actioncode' => '2',
                
-        
-        
-            ]);
+              ]);
         }
-
+         //end syslog
       //   $user_name = Auth::user()->custname;
 
     //     if(Auth::user()->custname =null){
@@ -652,12 +662,7 @@ class OrderController extends Controller
       
 //system log
  
-            
-             
-           
-
-       
-            
+                  
 
             Trackshipment::create([
                 'orderid' => $order->orderid,
@@ -826,7 +831,19 @@ public function updateorder(Request $request, order $order)
         return back()->withErrors($validator);
     } else {
         // Create a Order instance and configure the values before insert action
-       
+             //start system log
+             $user_id = Auth::user()->id;
+             $user_name1 = Auth::user()->custname;
+             $user_name2 = Auth::user()->stfName;
+             if(isset( $user_name1)){
+         
+                $user_name = $user_name1;
+             }else{
+               $user_name =$user_name2;
+             }
+
+             //end system log
+
         $order->custid = $request->custid;
         $order->custarea = $request->custarea;
         $order->receid = $request->receid;
@@ -900,27 +917,16 @@ public function updateorder(Request $request, order $order)
     
         ]);
 
-        //system log
-        $user_id = Auth::user()->id;
-        $user_name1 = Auth::user()->custname;
-        $user_name2 = Auth::user()->stfName;
-        if(isset( $user_name1)){
-    
-           $user_name = $user_name1;
-        }else{
-          $user_name =$user_name2;
-        }
+        //start ------insert system log
              syslog::create([
                     'userid' =>   $user_id,
                     'username' => $user_name ,
                     'oid' => $order->orderid,
                     'action' => "Order Updated,$request->status, OrderController.updateorder",
                     'actioncode' => '3',
-                   
-            
-            
+                          
                 ]);
-           //system log
+        //end ------insert system log
         if( $request['status'] == 'Complete')
         {   
             $data = 
@@ -1051,7 +1057,15 @@ public function updateorder(Request $request, order $order)
         if ($validator->fails()) {
             return Redirect::to('orders/createorderwithdetails')->withErrors($validator)->withInput();
         } else {
-          
+            $user_id = Auth::user()->id;
+            $user_name1 = Auth::user()->custname;
+            $user_name2 = Auth::user()->stfName;
+            if(isset( $user_name1)){
+        
+               $user_name = $user_name1;
+            }else{
+              $user_name =$user_name2;
+            }
 
             // Create a Order instance and configure the values before insert action
            $copy = $request->input("copy");
@@ -1092,6 +1106,19 @@ public function updateorder(Request $request, order $order)
             $order->totalamount =   $request->totalamount;
             $order->paymentstatus =   $request->paymentstatus;
             $order->remark =   $request->remark;
+            //start --check create user customer ?? staff 
+             if(isset( $user_name1)){
+        
+                  $create_id =2;
+
+                  $order->created_by =  $create_id;
+                }else{
+               $create_id =  $user_id;
+              $order->created_by =  $create_id;
+                    }
+             //end -------------------------------------------
+
+
             $order->createddate = Carbon::now();
             $order->ordertype =  'Copy Order';
             $order->save();
@@ -1101,15 +1128,16 @@ public function updateorder(Request $request, order $order)
             $booking->location = $request->location;
             $booking->bookingtime = $request->bookingtime;
             $order->booking()->save($booking);
+         //start system log-----------------------
             syslog::create([
                 'userid' =>   $user_id,
                 'username' => $user_name ,
                 'oid' => $booking->bookingid,
                 'action' => "Created Booking, OrderController.updateorderb",
                 'actioncode' => '2',
-               
-                      
+                  
             ]);
+             //end system log----------------------------
             }
             Trackshipment::create([
                 'orderid' => $order->orderid,
@@ -1120,16 +1148,8 @@ public function updateorder(Request $request, order $order)
         
             ]);
 
-            $user_id = Auth::user()->id;
-            $user_name1 = Auth::user()->custname;
-            $user_name2 = Auth::user()->stfName;
-            if(isset( $user_name1)){
-        
-               $user_name = $user_name1;
-            }else{
-              $user_name =$user_name2;
-            }
-        
+         
+           //start system log-----------------------
             syslog::create([
                 'userid' =>   $user_id,
                 'username' => $user_name ,
@@ -1138,9 +1158,9 @@ public function updateorder(Request $request, order $order)
                 'actioncode' => '1',
         
             ]); 
-                     
+             //end system log-----------------------
                    
-         //system log
+      
             // Insert order item detail based on the inserted order
             $itemHamoCodes = $request->input('itemHamoCode', []);
             $descs = $request->input('desc', []);

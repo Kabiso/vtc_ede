@@ -22,6 +22,7 @@ class CreateStaffTable extends Migration
             $table->unsignedInteger('jobtitles_id');
             $table->string('password');
             $table->timestamps();
+            $table->integer('is_deleted')->default(0);
             
             $table->index('jobtitles_id');
         });
